@@ -24,7 +24,7 @@ def load_clinical_model():
 try:
     clinical_engine = load_clinical_model()
 except FileNotFoundError:
-    st.error("Core engine training dataset files missing.")
+    st.error("Core engine training dataset missing.")
     st.stop()
 
 map_binary = lambda text: 1 if text == "Yes" else 0
@@ -53,7 +53,7 @@ st.markdown("""
         }
         .protocol-box { border-radius: 12px; padding: 1.5rem; margin-top: 1rem; color: #1e293b; }
         .family-box { background-color: #fef2f2; border-left: 5px solid #ef4444; }
-        .medic-box { background-color: #f0fdfa; border-left: 5px solid #0d9488; }
+        .medical-box { background-color: #f0fdfa; border-left: 5px solid #0d9488; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -163,14 +163,14 @@ with tab_screen:
                                 "2. <b>REST ON LEFT SIDE ONLY:</b> Avoid flat back postures to sustain uterine and renal vascular flows.<br>"
                                 "3. <b>MINIMIZE VISUAL STIMULI:</b> Keep rooms dim and quiet. Sensory stress drops seizure thresholds under hypertensive states.</div>", unsafe_allow_html=True)
                     
-                    st.markdown("<div class='protocol-box medic-box'><h4>🏥 EMERGENCY MEDIC RESPONSE SEQUENCES</h4>"
-                                "• <b>Vascular Control:</b> Administer oral Labetalol or fast-acting Nifedipine immediately if Systolic $\\ge$ 160 mmHg.<br>"
+                    st.markdown("<div class='protocol-box medical-box'><h4>🏥 EMERGENCY MEDICAL RESPONSE SEQUENCES</h4>"
+                                "• <b>Vascular Control:</b> Administer oral Labetalol or fast-acting Nifedipine immediately if Systolic ≥ 160 mmHg.<br>"
                                 "• <b>Seizure Blockades:</b> Deploy full <b>Magnesium Sulfate (MgSO4)</b> loading protocols.<br>"
                                 "• <b>Obstetric Clearance:</b> Assess fetal maturity parameters. Prepare logistics for stabilization or active triage transport.</div>", unsafe_allow_html=True)
                 else:
-                    st.markdown("<div class='protocol-box medic-box' style='border-left-color: #0d9488;'><h4>✅ SYSTEM RISK CLASSIFICATION: STABLE TRACK</h4>"
+                    st.markdown("<div class='protocol-box medical-box' style='border-left-color: #0d9488;'><h4>✅ SYSTEM RISK CLASSIFICATION: STABLE TRACK</h4>"
                                 "Patient is tracking within safe algorithmic norms. Secure regular checkup intervals.<br>"
-                                "<b>CRITICAL INSTRUCTION:</b> If maternal headaches, vision spots, or acute right side stomach discomfort manifest later today, rerunning this triage assessment module immediately is mandatory.</div>", unsafe_allow_html=True)
+                                "<b>CRITICAL INSTRUCTION:</b> If maternal headaches, vision spots, or acute right side stomach discomfort manifest later today, rerunning this triage assessment mo[...]", unsafe_allow_html=True)
         else:
             st.info("Awaiting input initialization metrics panel. Complete and execute Step 1 & 2 to populate diagnostic triage response logs.")
 
@@ -179,6 +179,6 @@ with tab_manual:
     st.markdown("""
     ### System Workflow Synchronization Overview
     1. **The Baselines Matrix:** Use the structural sidebar panels to input background genetic, demographic, and geographical contexts before reviewing ongoing parameters.
-    2. **Urine Protein Testing Cards:** Dip standard validation testing strip layers inside early morning urine samples. Align color gradients closely with reference panels, logging results as numeric values `0` through `3`.
-    3. **The Unwell Override Protocol:** Preeclampsia operates on variable timelines. Any single warning sign checkbox trigger enforces a clinical high-risk output flag automatically to protect human life.
+    2. **Urine Protein Testing Cards:** Dip standard validation testing strip layers inside early morning urine samples. Align color gradients closely with reference panels, logging results as nu[...]
+    3. **The Unwell Override Protocol:** Preeclampsia operates on variable timelines. Any single warning sign checkbox trigger enforces a clinical high-risk output flag automatically to protect h[...]
     """, unsafe_allow_html=True)
