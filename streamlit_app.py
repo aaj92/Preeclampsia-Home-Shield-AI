@@ -99,7 +99,7 @@ with tab_screen:
             'crisis_displacement_flag': map_binary(displaced)
         }])
         
-       raw_prob = float(clinical_engine.predict_proba(input_vector)[0, 1])
+        raw_prob = float(clinical_engine.predict_proba(input_vector)[0, 1])
 
         
         # Override calculation safety ceiling if severe home red flags are explicitly triggered
@@ -143,6 +143,6 @@ with tab_about:
     ### How to Use the At-Home Kit in Displacement Settings
     
     1. **The Morning Routine:** Every morning, before eating or walking around, the mother should sit quietly for 5 minutes, then take her blood pressure. 
-    2. **The Dipstick Method:** Collect a tiny amount of urine in a clean cup. Dip the paper strip for 2 seconds. Shake off excess fluid. Wait 60 seconds, then match the color to the cardboard reference strip.
+    2. **The Dipstick Method:** Collect a tiny amount of urine in a clean cup. Dip the paper strip for 2 seconds. Shake off excess fluid. Wait 60 seconds, then match the color to the cardboard reference card.
     3. **The Unwell Trigger:** Preeclampsia does not care about schedules. If a mother says *'I feel strange'* or complains of a headache, her family must run this app immediately.
     """)
