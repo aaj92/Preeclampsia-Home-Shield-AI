@@ -53,7 +53,7 @@ st.markdown("""
         .family-box { background-color: #fef2f2; border-left: 5px solid #ef4444; }
         .medic-box { background-color: #f0fdfa; border-left: 5px solid #0d9488; }
     </style>
-""", unsafe_content_with_markup=True)
+""", unsafe_allow_html=True)
 
 # App Core Visual Header Banner Area
 header_col1, header_col2 = st.columns([0.15, 0.85])
@@ -63,13 +63,13 @@ with header_col1:
     except:
         st.subheader("🛡️")
 with header_col2:
-    st.markdown("<h1 style='color: #0f172a; margin-bottom: 0;'>MATERNAL HOME-SHIELD</h1>", unsafe_content_with_markup=True)
-    st.markdown("<p style='color: #64748b; font-size: 1.1rem; margin-top: 0;'>Predictive Early-Detection & Triage Ecosystem</p>", unsafe_content_with_markup=True)
+    st.markdown("<h1 style='color: #0f172a; margin-bottom: 0;'>MATERNAL HOME-SHIELD</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='color: #64748b; font-size: 1.1rem; margin-top: 0;'>Predictive Early-Detection & Triage Ecosystem</p>", unsafe_allow_html=True)
 
-st.markdown("<hr style='margin-top: 0.5rem; margin-bottom: 2rem;'>", unsafe_content_with_markup=True)
+st.markdown("<hr style='margin-top: 0.5rem; margin-bottom: 2rem;'>", unsafe_allow_html=True)
 
 # Sidebar Patient Characteristics Configurations
-st.sidebar.markdown("<h3 style='color: #f8fafc;'>👤 Baseline Profile</h3>", unsafe_content_with_markup=True)
+st.sidebar.markdown("<h3 style='color: #f8fafc;'>👤 Baseline Profile</h3>", unsafe_allow_html=True)
 age = st.sidebar.slider("Maternal Age", 14, 50, 25)
 first_preg = st.sidebar.selectbox("First-Time Pregnancy?", ["No", "Yes"])
 twins = st.sidebar.selectbox("Carrying Twins/Multiples?", ["No", "Yes"])
@@ -84,7 +84,7 @@ with tab_screen:
     input_panel_col, feedback_panel_col = st.columns([1.1, 0.9])
     
     with input_panel_col:
-        st.markdown("<h4 style='color: #0f766e;'>🛑 Step 1: Systematic Symptom Checklist</h4>", unsafe_content_with_markup=True)
+        st.markdown("<h4 style='color: #0f766e;'>🛑 Step 1: Systematic Symptom Checklist</h4>", unsafe_allow_html=True)
         st.caption("Check all active discomfort vectors expressed or experienced by the mother right now:")
         
         sym_col1, sym_col2 = st.columns(2)
@@ -95,7 +95,7 @@ with tab_screen:
             s_pain = st.checkbox("Sharp upper right abdominal/rib pain")
             s_swelling = st.checkbox("Sudden swelling of face, eyes, or hands")
             
-        st.markdown("<br><h4 style='color: #0f766e;'>📈 Step 2: Clinical Vitals & Urine Strips</h4>", unsafe_content_with_markup=True)
+        st.markdown("<br><h4 style='color: #0f766e;'>📈 Step 2: Clinical Vitals & Urine Strips</h4>", unsafe_allow_html=True)
         
         vits_col1, vits_col2 = st.columns(2)
         with vits_col1:
@@ -112,14 +112,19 @@ with tab_screen:
                 ]
             )
             
-        protein_numeric = float(urine_score.split(":"))
+        # Fix: parse the numeric prefix of the radio label safely
+        try:
+            protein_numeric = float(urine_score.split(":")[0])
+        except Exception:
+            protein_numeric = 0.0
+
         symptom_active = s_headache or s_vision or s_pain or s_swelling
         
-        st.markdown("<br>", unsafe_content_with_markup=True)
+        st.markdown("<br>", unsafe_allow_html=True)
         execute_analysis = st.button("🚀 EXECUTE CLINICAL ASSESSMENT RUN", use_container_width=True)
 
     with feedback_panel_col:
-        st.markdown("<h4 style='color: #1e293b;'>📊 Diagnostic Assessment Matrix</h4>", unsafe_content_with_markup=True)
+        st.markdown("<h4 style='color: #1e293b;'>📊 Diagnostic Assessment Matrix</h4>", unsafe_allow_html=True)
         
         if execute_analysis:
             input_vector = pd.DataFrame([{
@@ -133,7 +138,14 @@ with tab_screen:
                 'crisis_displacement_flag': map_binary(displaced)
             }])
             
-            raw_prob = float(clinical_engine.predict_proba(input_vector))
+            # Ensure we extract the positive-class probability safely
+            prob_array = clinical_engine.predict_proba(input_vector)
+            try:
+                raw_prob = float(prob_array[0, 1])
+            except Exception:
+                # fallback: if only one column or unexpected shape
+                raw_prob = float(prob_array[0][1]) if len(prob_array[0]) > 1 else float(prob_array[0][0])
+
             critical_vitals = (systolic >= 140) or (diastolic >= 90) or (protein_numeric >= 2)
             is_high_risk = (raw_prob >= 0.28) or symptom_active or critical_vitals
             
@@ -143,22 +155,22 @@ with tab_screen:
                     <p style="color: #64748b; font-weight: 600; margin: 0; text-transform: uppercase; font-size: 0.85rem;">Calculated Statistical Onset Probability</p>
                     <h2 style="color: {'#ef4444' if is_high_risk else '#0d9488'}; margin: 0.5rem 0 0 0; font-size: 2.5rem; font-weight: 700;">{raw_prob:.1%}</h2>
                 </div>
-            """, unsafe_content_with_markup=True)
+            """, unsafe_allow_html=True)
             
             if is_high_risk:
                 st.markdown("<div class='protocol-box family-box'><h4>🚨 IMMEDIATE HOUSEHOLD EMERGENCY ACTIONS</h4>"
                             "1. <b>EVACUATE TO CLINIC IMMEDIATELY:</b> Do not wait for appointments. Leave now.<br>"
                             "2. <b>REST ON LEFT SIDE ONLY:</b> Avoid flat back postures to sustain uterine and renal vascular flows.<br>"
-                            "3. <b>MINIMIZE VISUAL STIMULI:</b> Keep rooms dim and quiet. Sensory stress drops seizure thresholds under hypertensive states.</div>", unsafe_content_with_markup=True)
+                            "3. <b>MINIMIZE VISUAL STIMULI:</b> Keep rooms dim and quiet. Sensory stress drops seizure thresholds under hypertensive states.</div>", unsafe_allow_html=True)
                 
                 st.markdown("<div class='protocol-box medic-box'><h4>🏥 EMERGENCY MEDIC RESPONSE SEQUENCES</h4>"
                             "• <b>Vascular Control:</b> Administer oral Labetalol or fast-acting Nifedipine immediately if Systolic $\\ge$ 160 mmHg.<br>"
                             "• <b>Seizure Blockades:</b> Deploy full <b>Magnesium Sulfate (MgSO4)</b> loading protocols.<br>"
-                            "• <b>Obstetric Clearance:</b> Assess fetal maturity parameters. Prepare logistics for stabilization or active triage transport.</div>", unsafe_content_with_markup=True)
+                            "• <b>Obstetric Clearance:</b> Assess fetal maturity parameters. Prepare logistics for stabilization or active triage transport.</div>", unsafe_allow_html=True)
             else:
                 st.markdown("<div class='protocol-box medic-box' style='border-left-color: #0d9488;'><h4>✅ SYSTEM RISK CLASSIFICATION: STABLE TRACK</h4>"
                             "Patient is tracking within safe algorithmic norms. Secure regular checkup intervals.<br>"
-                            "<b>CRITICAL INSTRUCTION:</b> If maternal headaches, vision spots, or acute right side stomach discomfort manifest later today, rerunning this triage assessment module immediately is mandatory.</div>", unsafe_content_with_markup=True)
+                            "<b>CRITICAL INSTRUCTION:</b> If maternal headaches, vision spots, or acute right side stomach discomfort manifest later today, rerunning this triage assessment module immediately is mandatory.</div>", unsafe_allow_html=True)
         else:
             st.info("Awaiting input initialization metrics panel. Complete and execute Step 1 & 2 to populate diagnostic triage response logs.")
 
@@ -169,4 +181,4 @@ with tab_manual:
     1. **The Baselines Matrix:** Use the structural sidebar panels to input background genetic, demographic, and geographical contexts before reviewing ongoing parameters.
     2. **Urine Protein Testing Cards:** Dip standard validation testing strip layers inside early morning urine samples. Align color gradients closely with reference panels, logging results as numeric values `0` through `3`.
     3. **The Unwell Override Protocol:** Preeclampsia operates on variable timelines. Any single warning sign checkbox trigger enforces a clinical high-risk output flag automatically to protect human life.
-    """)
+    """, unsafe_allow_html=True)
