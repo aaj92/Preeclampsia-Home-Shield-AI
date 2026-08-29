@@ -52,26 +52,49 @@ TRANSLATIONS = {
         "high_risk_alert": "HIGH RISK: Preeclampsia/Eclampsia Suspected",
         "high_risk_desc": "Immediate medical evaluation required",
         "risk_percentage": "Preeclampsia Risk Score",
-        "action_plan": "Recommended Actions",
-        "family_actions": "Family Actions",
-        "action_1": "Proceed to hospital without delay",
-        "action_2": "Rest on left side to improve blood flow",
-        "action_3": "Keep in quiet environment; minimize stress",
         
-        "medical_response": "EMERGENCY MEDICAL RESPONSE (Key Points)",
-        "medical_anticonvulsant": "Anticonvulsant — Magnesium Sulfate",
-        "medical_loading": "Loading dose: 4-6 g IV slow over 20-30 minutes",
-        "medical_maintenance": "Maintenance: 1-2 g/hour IV infusion OR 5 g IM every 4 hours",
-        "medical_monitoring": "Monitoring",
-        "medical_monitor_vitals": "Respiratory rate and patellar reflexes hourly; urine output hourly (alert if <25-30 mL/h)",
-        "medical_monitor_bp": "Continuous blood pressure and fetal monitoring as available",
-        "medical_toxicity": "Toxicity — Immediate Actions",
-        "medical_toxicity_text": "If absent reflexes, RR <12/min, or oliguria → stop MgSO4; give calcium gluconate 10 mL of 10% (1 g) IV slowly",
-        "medical_toxicity_support": "Provide respiratory support and call senior help immediately",
-        "medical_duration": "Duration",
-        "medical_duration_text": "Continue for 24 hours after last seizure or after delivery (whichever is later)",
-        "medical_practical": "Practical Notes",
-        "medical_practical_text": "Confirm local MgSO4 concentration before converting; keep calcium gluconate at bedside; use strict sterile technique",
+        # Family Actions (Left Column)
+        "family_response": "👨‍👩‍👧 IMMEDIATE FAMILY RESPONSE",
+        "family_actions_title": "Actions for Family/Caregiver",
+        "action_1": "Seek hospital care immediately - do not delay",
+        "action_2": "Position mother on LEFT SIDE to improve blood flow",
+        "action_3": "Keep environment quiet and dark - reduce stress",
+        "action_4": "Inform hospital staff of high preeclampsia risk",
+        "action_5": "Bring this screening result to hospital",
+        
+        # Medical Response (Right Column) - WHO Protocol
+        "medical_response": "🏥 EMERGENCY MEDICAL RESPONSE",
+        "medical_response_subtitle": "(WHO Clinical Management Protocol)",
+        
+        "anti_seizure": "Anti-Seizure Prophylaxis",
+        "anti_seizure_drug": "Magnesium Sulfate (MgSO₄) - First Line",
+        "loading_dose": "Loading Dose:",
+        "loading_text": "4-6 g IV over 20-30 minutes",
+        "maintenance_dose": "Maintenance Dose:",
+        "maintenance_text": "1-2 g/hour IV continuous OR 5 g IM every 4 hours",
+        
+        "vitals_monitoring": "Continuous Monitoring",
+        "monitor_1": "Blood Pressure: every 15 min initially, then hourly",
+        "monitor_2": "Respiratory rate: every hour (alert if <12/min)",
+        "monitor_3": "Patellar reflexes: every hour (assess for hyperreflexia)",
+        "monitor_4": "Urine output: hourly (alert if <30 mL/h)",
+        "monitor_5": "Fetal heart rate: continuous if available",
+        
+        "urgent_action": "Urgent Actions",
+        "urgent_1": "Prepare for DELIVERY - definitive treatment",
+        "urgent_2": "If ≥37 weeks gestation: proceed to delivery",
+        "urgent_3": "If <37 weeks: assess delivery vs expectant management",
+        "urgent_4": "Have ICU/HDU bed available",
+        
+        "toxicity_alert": "⚠️ MgSO₄ Toxicity Signs",
+        "toxicity_1": "STOP MgSO₄ if: Absent reflexes OR RR <12/min OR oliguria (<30 mL/h)",
+        "toxicity_action": "Immediate Action: Give calcium gluconate 10 mL of 10% (1 g) IV slowly",
+        "toxicity_support": "Support: Airway management, O₂, call senior clinician immediately",
+        
+        "post_eclampsia": "Post-Seizure/Delivery Care",
+        "post_1": "Continue MgSO₄ for 24 hours after last seizure or delivery (whichever later)",
+        "post_2": "Monitor for pulmonary edema, renal dysfunction, cerebral hemorrhage",
+        "post_3": "Consider ICU admission if severe preeclampsia/eclampsia",
         
         "low_risk": "LOW RISK: Screening Completed",
         "low_risk_desc": "No acute risk indicators detected",
@@ -149,26 +172,49 @@ TRANSLATIONS = {
         "high_risk_alert": "RISQUE ÉLEVÉ: Prééclampsie/Éclampsie Suspectée",
         "high_risk_desc": "Évaluation médicale immédiate requise",
         "risk_percentage": "Score de Risque de Prééclampsie",
-        "action_plan": "Actions Recommandées",
-        "family_actions": "Actions de la Famille",
-        "action_1": "Se rendre à l'hôpital sans délai",
-        "action_2": "Reposer sur le côté gauche pour améliorer la circulation",
-        "action_3": "Maintenir un environnement calme; minimiser le stress",
         
-        "medical_response": "RÉPONSE MÉDICALE D'URGENCE (Points Clés)",
-        "medical_anticonvulsant": "Anticonvulsivant — Sulfate de Magnésium",
-        "medical_loading": "Dose de charge: 4-6 g IV lent sur 20-30 minutes",
-        "medical_maintenance": "Entretien: 1-2 g/heure IV en perfusion OU 5 g IM toutes les 4 heures",
-        "medical_monitoring": "Surveillance",
-        "medical_monitor_vitals": "Fréquence respiratoire et réflexes patellaires toutes les heures; débit urinaire horaire (alerte si <25-30 mL/h)",
-        "medical_monitor_bp": "Surveillance continue de la PA et monitorage fœtal si disponible",
-        "medical_toxicity": "Toxicité — Actions Immédiates",
-        "medical_toxicity_text": "Si réflexes absents, FR <12/min, ou oligurie → arrêter MgSO4; donner gluconate de calcium 10 mL de 10% (1 g) IV lentement",
-        "medical_toxicity_support": "Fournir un soutien respiratoire et appeler l'aide senior immédiatement",
-        "medical_duration": "Durée",
-        "medical_duration_text": "Continuer pendant 24 heures après la dernière crise ou après l'accouchement (le plus tard)",
-        "medical_practical": "Notes Pratiques",
-        "medical_practical_text": "Confirmer la concentration locale de MgSO4 avant la conversion; garder le gluconate de calcium à côté du lit; utiliser une technique stérile stricte",
+        # Family Actions (Left Column)
+        "family_response": "👨‍👩‍👧 RÉPONSE FAMILIALE IMMÉDIATE",
+        "family_actions_title": "Actions pour la Famille/Soignant",
+        "action_1": "Chercher les soins hospitaliers immédiatement - ne pas attendre",
+        "action_2": "Positionner la mère sur le CÔTÉ GAUCHE pour améliorer la circulation",
+        "action_3": "Garder l'environnement calme et sombre - réduire le stress",
+        "action_4": "Informer le personnel hospitalier du risque élevé de prééclampsie",
+        "action_5": "Apporter ce résultat de dépistage à l'hôpital",
+        
+        # Medical Response (Right Column) - WHO Protocol
+        "medical_response": "🏥 RÉPONSE MÉDICALE D'URGENCE",
+        "medical_response_subtitle": "(Protocole de Gestion Clinique OMS)",
+        
+        "anti_seizure": "Prophylaxie Anti-Convulsante",
+        "anti_seizure_drug": "Sulfate de Magnésium (MgSO₄) - Première Intention",
+        "loading_dose": "Dose de Charge:",
+        "loading_text": "4-6 g IV sur 20-30 minutes",
+        "maintenance_dose": "Dose d'Entretien:",
+        "maintenance_text": "1-2 g/heure IV continu OU 5 g IM toutes les 4 heures",
+        
+        "vitals_monitoring": "Surveillance Continue",
+        "monitor_1": "Pression Artérielle: toutes les 15 min initialement, puis toutes les heures",
+        "monitor_2": "Fréquence respiratoire: toutes les heures (alerte si <12/min)",
+        "monitor_3": "Réflexes patellaires: toutes les heures (évaluer l'hyperréflexie)",
+        "monitor_4": "Débit urinaire: horaire (alerte si <30 mL/h)",
+        "monitor_5": "Fréquence cardiaque fœtale: continue si disponible",
+        
+        "urgent_action": "Actions Urgentes",
+        "urgent_1": "Préparer l'ACCOUCHEMENT - traitement définitif",
+        "urgent_2": "Si ≥37 semaines: procéder à l'accouchement",
+        "urgent_3": "Si <37 semaines: évaluer l'accouchement vs gestion expectante",
+        "urgent_4": "Avoir un lit USI/HDU disponible",
+        
+        "toxicity_alert": "⚠️ Signes de Toxicité du MgSO₄",
+        "toxicity_1": "ARRÊTER MgSO₄ si: Réflexes absents OU FR <12/min OU oligurie (<30 mL/h)",
+        "toxicity_action": "Action Immédiate: Donner gluconate de calcium 10 mL de 10% (1 g) IV lentement",
+        "toxicity_support": "Soutien: Gestion des voies aériennes, O₂, appeler le clinicien senior immédiatement",
+        
+        "post_eclampsia": "Soins Post-Crise/Accouchement",
+        "post_1": "Continuer MgSO₄ pendant 24 heures après la dernière crise ou l'accouchement (le plus tard)",
+        "post_2": "Surveiller l'œdème pulmonaire, la dysfonction rénale, l'hémorragie cérébrale",
+        "post_3": "Envisager l'admission à l'USI si prééclampsie/éclampsie sévère",
         
         "low_risk": "RISQUE FAIBLE: Dépistage Terminé",
         "low_risk_desc": "Aucun indicateur de risque aigu détecté",
@@ -275,45 +321,64 @@ st.markdown("""
             color: #2ca02c;
             background-color: rgba(44, 160, 44, 0.1);
         }
-        .medical-card {
-            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
-            border-left: 5px solid #006064;
+        .response-card {
+            background: #f8f9fa;
             border-radius: 12px;
-            padding: 2rem;
-            margin: 1.5rem 0;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-top: 4px solid;
+            height: 100%;
         }
-        .medical-section-title {
-            color: #00497a;
+        .family-card {
+            border-top-color: #0066cc;
+        }
+        .medical-card {
+            border-top-color: #d62728;
+        }
+        .card-title {
             font-size: 1.2em;
             font-weight: bold;
-            margin-top: 1.5rem;
-            margin-bottom: 0.8rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #00b4d8;
-        }
-        .medical-subsection {
-            margin-left: 1.5rem;
             margin-bottom: 1rem;
-            padding: 1rem;
-            background-color: rgba(255,255,255,0.7);
-            border-radius: 6px;
-            border-left: 3px solid #0096d1;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid;
         }
-        .medical-subsection-title {
-            color: #00497a;
+        .family-card .card-title {
+            color: #0066cc;
+            border-bottom-color: #0066cc;
+        }
+        .medical-card .card-title {
+            color: #d62728;
+            border-bottom-color: #d62728;
+        }
+        .card-section {
+            margin: 1rem 0;
+            padding: 0.8rem;
+            background-color: rgba(255,255,255,0.8);
+            border-left: 3px solid;
+            border-radius: 4px;
+        }
+        .family-card .card-section {
+            border-left-color: #0066cc;
+        }
+        .medical-card .card-section {
+            border-left-color: #d62728;
+        }
+        .section-title {
             font-weight: bold;
-            font-size: 1em;
-            margin-bottom: 0.5rem;
-        }
-        .medical-text {
-            color: #1a1a1a;
-            line-height: 1.6;
             font-size: 0.95em;
-        }
-        .medical-bullet {
-            margin-left: 1rem;
             margin-bottom: 0.5rem;
+            color: #333;
+        }
+        .section-text {
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #555;
+        }
+        .toxicity-alert {
+            background-color: rgba(214, 39, 40, 0.15);
+            border-left-color: #d62728 !important;
+            color: #d62728;
+            font-weight: bold;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -449,63 +514,83 @@ with tab_screening:
                 </div>
             """, unsafe_allow_html=True)
             
-            # Family Actions Section
-            family_col, medical_col = st.columns(2)
+            st.markdown("---")
             
-            with family_col:
-                with st.container(border=True):
-                    st.markdown(f"### {t('family_actions')}")
-                    st.markdown(f"✓ {t('action_1')}")
-                    st.markdown(f"✓ {t('action_2')}")
-                    st.markdown(f"✓ {t('action_3')}")
+            # Side-by-Side Response Cards
+            left_col, right_col = st.columns(2)
             
-            with medical_col:
-                st.markdown("")  # Spacer
-            
-            # Professional Medical Response Card
-            st.markdown(f"""
-                <div class='medical-card'>
-                    <h2 style='text-align: center; color: #00497a; margin-bottom: 1.5rem;'>
-                        🏥 {t('medical_response')}
-                    </h2>
-                    
-                    <div class='medical-section-title'>{t('medical_anticonvulsant')}</div>
-                    <div class='medical-subsection'>
-                        <div class='medical-subsection-title'>Loading Phase:</div>
-                        <div class='medical-text'>• {t('medical_loading')}</div>
-                    </div>
-                    <div class='medical-subsection'>
-                        <div class='medical-subsection-title'>Maintenance Phase:</div>
-                        <div class='medical-text'>• {t('medical_maintenance')}</div>
-                    </div>
-                    
-                    <div class='medical-section-title'>{t('medical_monitoring')}</div>
-                    <div class='medical-subsection'>
-                        <div class='medical-text'>
-                            • {t('medical_monitor_vitals')}<br>
-                            • {t('medical_monitor_bp')}
+            with left_col:
+                st.markdown(f"""
+                    <div class='response-card family-card'>
+                        <div class='card-title'>{t('family_response')}</div>
+                        
+                        <div class='card-section'>
+                            <div class='section-text'>
+                                ✓ {t('action_1')}<br>
+                                ✓ {t('action_2')}<br>
+                                ✓ {t('action_3')}<br>
+                                ✓ {t('action_4')}<br>
+                                ✓ {t('action_5')}
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class='medical-section-title' style='color: #d62728;'>{t('medical_toxicity')}</div>
-                    <div class='medical-subsection' style='background-color: rgba(214, 39, 40, 0.08); border-left-color: #d62728;'>
-                        <div class='medical-text'>
-                            {t('medical_toxicity_text')}<br><br>
-                            {t('medical_toxicity_support')}
+                """, unsafe_allow_html=True)
+            
+            with right_col:
+                st.markdown(f"""
+                    <div class='response-card medical-card'>
+                        <div class='card-title'>{t('medical_response')}</div>
+                        <div style='font-size: 0.9em; color: #666; margin-bottom: 1rem;'>{t('medical_response_subtitle')}</div>
+                        
+                        <div class='card-section'>
+                            <div class='section-title'>{t('anti_seizure')}</div>
+                            <div class='section-text'>{t('anti_seizure_drug')}</div>
+                            <div style='margin-top: 0.5rem;'>
+                                <strong>{t('loading_dose')}</strong> {t('loading_text')}<br>
+                                <strong>{t('maintenance_dose')}</strong> {t('maintenance_text')}
+                            </div>
+                        </div>
+                        
+                        <div class='card-section'>
+                            <div class='section-title'>{t('vitals_monitoring')}</div>
+                            <div class='section-text'>
+                                • {t('monitor_1')}<br>
+                                • {t('monitor_2')}<br>
+                                • {t('monitor_3')}<br>
+                                • {t('monitor_4')}<br>
+                                • {t('monitor_5')}
+                            </div>
+                        </div>
+                        
+                        <div class='card-section'>
+                            <div class='section-title'>{t('urgent_action')}</div>
+                            <div class='section-text'>
+                                • {t('urgent_1')}<br>
+                                • {t('urgent_2')}<br>
+                                • {t('urgent_3')}<br>
+                                • {t('urgent_4')}
+                            </div>
+                        </div>
+                        
+                        <div class='card-section toxicity-alert'>
+                            <div class='section-title'>{t('toxicity_alert')}</div>
+                            <div class='section-text'>
+                                • {t('toxicity_1')}<br>
+                                • {t('toxicity_action')}<br>
+                                • {t('toxicity_support')}
+                            </div>
+                        </div>
+                        
+                        <div class='card-section'>
+                            <div class='section-title'>{t('post_eclampsia')}</div>
+                            <div class='section-text'>
+                                • {t('post_1')}<br>
+                                • {t('post_2')}<br>
+                                • {t('post_3')}
+                            </div>
                         </div>
                     </div>
-                    
-                    <div class='medical-section-title'>{t('medical_duration')}</div>
-                    <div class='medical-subsection'>
-                        <div class='medical-text'>• {t('medical_duration_text')}</div>
-                    </div>
-                    
-                    <div class='medical-section-title'>{t('medical_practical')}</div>
-                    <div class='medical-subsection'>
-                        <div class='medical-text'>✓ {t('medical_practical_text')}</div>
-                    </div>
-                </div>
-            """, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
         
         else:
             # Low Risk Display
