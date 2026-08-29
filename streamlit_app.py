@@ -1,10 +1,15 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import sqlite3
+from datetime import datetime
 from sklearn.ensemble import RandomForestClassifier
 
+# Database Configuration
+DB_FILE = "preeclampsia_patient_registry.db"
+
 # --------------------------------------------------------
-# CORE SYSTEM OPERATIONS & CONFIGURATIONS
+# CORE ANALYTICS ENGINE INFRASTRUCTURE
 # --------------------------------------------------------
 @st.cache_resource
 def load_clinical_model():
@@ -18,156 +23,125 @@ def load_clinical_model():
 try:
     clinical_engine = load_clinical_model()
 except FileNotFoundError:
-    st.error("Core engine training dataset files missing.")
+    st.error("Core database file missing.")
     st.stop()
 
-map_binary = lambda text: 1 if text in ["Yes", "Oui"] else 0
-
 # --------------------------------------------------------
-# ISOLATED MEDICAL PROTOCOL STRINGS (PREVENTS NESTING ERRORS)
+# INTERACTIVE UI FRAMEWORK
 # --------------------------------------------------------
-EN_MEDIC_TEXT = (
-    "<ul>"
-    "<li><b>Anticonvulsant Administration (Magnesium Sulfate):</b>"
-    "<ul>"
-    "<li><i>Pritchard Regimen (IM + IV):</i> Loading dose of 4g IV slowly + 10g IM (5g inside each buttock). Maintain with 5g IM every 4 hours.</li>"
-    "<li><i>Zuspan Regimen (IV):</i> Loading dose of 4g IV slowly. Maintain with a continuous 1 g/hour IV infusion.</li>"
-    "</ul>"
-    "</li>"
-    "<li><b>Mandatory Hourly Clinical Safety Monitoring:</b>"
-    "<ul>"
-    "<li>Evaluate respiratory rate (RR) and patellar deep-tendon reflexes every hour.</li>"
-    "<li>Monitor fluid balance hourly. Trigger emergency alert guidelines if urine output drops below 25-30 mL/hour.</li>"
-    "</ul>"
-    "</li>"
-    "<li><b>Magnesium Toxicity Reversal Protocol:</b>"
-    "<ul>"
-    "<li>If patellar reflexes vanish, RR drops below 12 breaths/minute, or severe oliguria occurs: Stop MgSO4 immediately.</li>"
-    "<li>Administer 10 mL of 10% Calcium Gluconate (1g) intravenously slowly. Provide respiratory support and secure senior medical call assistance.</li>"
-    "</ul>"
-    "</li>"
-    "</ul>"
-)
+st.set_page_config(page_title="Home Maternal Triage Shield", layout="wide")
 
-FR_MEDIC_TEXT = (
-    "<ul>"
-    "<li><b>Administration d'Anticonvulsivants (Sulfate de Magnésium) :</b>"
-    "<ul>"
-    "<li><i>Protocole de Pritchard (IM + IV) :</i> Dose de charge de 4g IV lentement + 10g IM (5g dans chaque fesse). Maintenir avec 5g IM toutes les 4 heures.</li>"
-    "<li><i>Protocole de Zuspan (IV) :</i> Dose de charge de 4g IV lentement. Maintenir avec une perfusion IV continue de 1 g/heure.</li>"
-    "</ul>"
-    "</li>"
-    "<li><b>Surveillance Horaire Obligatoire de la Sécurité Clinique :</b>"
-    "<ul>"
-    "<li>Évaluez la fréquence respiratoire (FR) et les réflexes rotuliens toutes les heures.</li>"
-    "<li>Surveillez l'équilibre hydrique heure par heure. Alerte si la production d'urine tombe en dessous de 25-30 mL/heure.</li>"
-    "</ul>"
-    "</li>"
-    "<li><b>Protocole d'Inversion de la Toxicité du Magnésium :</b>"
-    "<ul>"
-    "<li>Si les réflexes disparaissent ou la FR tombe en dessous de 12 cycles/min : Arrêtez le MgSO4 immédiatement.</li>"
-    "<li>Administrer 10 mL de Gluconate de Calcium à 10% (1g) par voie intraveineuse lente. Appelez une assistance médicale.</li>"
-    "</ul>"
-    "</li>"
-    "</ul>"
-)
+st.title("🏡 Maternal Home-Shield Triage System")
+st.markdown("### Daily Offline Risk Assessment & Emergency Action Protocol")
+st.markdown("---")
 
-# --------------------------------------------------------
-# GLOBAL TRANSLATION DICTIONARY MAPS
-# --------------------------------------------------------
-LANG_DICT = {
-    "English": {
-        "title": "MATERNAL HOME-SHIELD",
-        "subtitle": "Predictive Early-Detection & Triage Ecosystem",
-        "baseline_header": "👤 Baseline Profile",
-        "age_label": "Maternal Age",
-        "first_preg_label": "First-Time Pregnancy?",
-        "twins_label": "Carrying Twins/Multiples?",
-        "hyper_label": "History of Hypertension?",
-        "displaced_label": "Crisis Displacement Status?",
-        "tab_screen": "🌤️ Active Diagnostic Triage Screen",
-        "tab_manual": "📖 Field Deployment Protocol Manual",
-        "step1_header": "🛑 Step 1: Systematic Symptom Checklist",
-        "step1_caption": "Check all active discomfort vectors expressed or experienced by the mother right now:",
-        "sym_headache": "Severe, throbbing persistent headache",
-        "sym_vision": "Blurry vision / flashing dark spots",
-        "sym_pain": "Sharp upper right abdominal/rib pain",
-        "sym_swelling": "Sudden swelling of face, eyes, or hands",
-        "step2_header": "📈 Step 2: Clinical Vitals & Urine Strips",
-        "sys_label": "Systolic Pressure (Top Cuff Number - mmHg)",
-        "dia_label": "Diastolic Pressure (Bottom Cuff Number - mmHg)",
-        "urine_label": "Dipstick Card Color Matching Scale:",
-        "urine_opts": [
-            "0: Normal (Yellow / Clear)",
-            "1: Trace Protein (Light Green)",
-            "2: High Protein (Medium Green)",
-            "3: Severe Protein (Dark Obsidian Green)"
-        ],
-        "btn_run": "🚀 EXECUTE CLINICAL ASSESSMENT RUN",
-        "matrix_header": "📊 Diagnostic Assessment Matrix",
-        "prob_label": "Calculated Statistical Onset Probability",
-        "awaiting_inputs": "Awaiting input initialization metrics panel. Complete and execute Step 1 & 2 to populate diagnostic triage response logs.",
-        "stable_header": "✅ SYSTEM RISK CLASSIFICATION: STABLE TRACK",
-        "stable_txt": "Patient is tracking within safe algorithmic norms. Secure regular checkup intervals.<br><b>CRITICAL INSTRUCTION:</b> If maternal headaches, vision spots, or acute right side stomach discomfort manifest later today, rerunning this triage assessment module immediately is mandatory.",
-        "family_header": "🚨 IMMEDIATE HOUSEHOLD EMERGENCY ACTIONS",
-        "family_txt": "1. <b>EVACUATE TO CLINIC IMMEDIATELY:</b> Do not wait for appointments. Leave now.<br>2. <b>REST ON LEFT SIDE ONLY:</b> Avoid flat back postures to sustain uterine and renal vascular flows.<br>3. <b>MINIMIZE VISUAL STIMULI:</b> Keep rooms dim and quiet. Sensory stress drops seizure thresholds under hypertensive states.",
-        "medic_header": "🏥 CRITICAL ECLAMPSIA MANAGEMENT INTEGRATION PROTOCOLS",
-        "medic_txt": EN_MEDIC_TEXT
-    },
-    "Français": {
-        "title": "BOUCLIER MATERNEL DOMESTIQUE",
-        "subtitle": "Écosystème Prédictif de Détection Précoce et de Triage",
-        "baseline_header": "👤 Profil de Base de la Mère",
-        "age_label": "Âge Maternel",
-        "first_preg_label": "Première Grossesse ?",
-        "twins_label": "Grossesse Gémellaire / Multiple ?",
-        "hyper_label": "Antécédents d'Hypertension ?",
-        "displaced_label": "Statut de Déplacement de Crise ?",
-        "tab_screen": "🌤️ Écran de Triage Diagnostique Actif",
-        "tab_manual": "📖 Manuel des Protocoles de Déploiement",
-        "step1_header": "🛑 Étape 1 : Liste des Symptômes Systématiques",
-        "step1_caption": "Cochez tous les facteurs d'inconfort exprimés ou ressentis par la mère en ce moment :",
-        "sym_headache": "Maux de tête graves, lancinants et persistants",
-        "sym_vision": "Vision floue / taches sombres clignotantes",
-        "sym_pain": "Douleur abdominale supérieure droite / côtes aiguës",
-        "sym_swelling": "Gonflement soudain du visage, des yeux ou des mains",
-        "step2_header": "📈 Étape 2 : Signes Vitaux Cliniques et Bandelettes Urinaires",
-        "sys_label": "Pression Systolique (Chiffre Supérieur du Brassard - mmHg)",
-        "dia_label": "Pression Diastolique (Chiffre Inférieur du Brassard - mmHg)",
-        "urine_label": "Échelle de Correspondance des Couleurs de la Bandelette :",
-        "urine_opts": [
-            "0 : Normal (Jaune / Clair)",
-            "1 : Traces de Protéines (Vert Clair)",
-            "2 : Protéines Élevées (Vert Moyen)",
-            "3 : Protéines Sévères (Vert Obsidienne Foncé)"
-        ],
-        "btn_run": "🚀 EXÉCUTER L'ÉVALUATION CLINIQUE",
-        "matrix_header": "📊 Matrice d'Évaluation Diagnostique",
-        "prob_label": "Probabilité Statistique de Début Calculée",
-        "awaiting_inputs": "En attente des paramètres d'initialisation. Remplissez les étapes 1 et 2 pour afficher le plan de triage.",
-        "stable_header": "✅ CLASSIFICATION DU RISQUE SYSTEME : SUIVI STABLE",
-        "stable_txt": "La patiente suit des normes algorithmiques sûres. Planifiez des examens réguliers.<br><b>INSTRUCTION CRITIQUE :</b> Si des maux de tête maternels, des troubles visuels ou une douleur aiguë à l'estomac droit apparaissent plus tard aujourd'hui, réexécutez ce module immédiatement.",
-        "family_header": "🚨 ACTIONS D'URGENCE IMMÉDIATES POUR LA FAMILLE",
-        "family_txt": "1. <b>ÉVACUER IMMÉDIATEMENT À LA CLINIQUE :</b> N'attendez pas de rendez-vous. Partez maintenant.<br>2. <b>REPOS SUR LE CÔTÉ GAUCHE UNIQUEMENT :</b> Évitez de vous allonger sur le dos pour maintenir les flux sanguins rénaux.<br>3. <b>MINIMISER LES STIMULI VISUELS :</b> Gardez les pièces sombres et calmes pour prévenir les crises.",
-        "medic_header": "🏥 PROTOCOLES CRITIQUES DE GESTION DE L'ÉCLAMPSIE",
-        "medic_txt": FR_MEDIC_TEXT
-    }
-}
+# Setup Sidebar Context for Personal Baseline
+st.sidebar.header("👤 Mother's Baseline Profile")
+age = st.sidebar.slider("Age", 14, 50, 25)
+first_preg = st.sidebar.selectbox("First Pregnancy?", ["No", "Yes"])
+twins = st.sidebar.selectbox("Carrying Twins?", ["No", "Yes"])
+chronic_hyper = st.sidebar.selectbox("History of Chronic High Blood Pressure?", ["No", "Yes"])
+displaced = st.sidebar.selectbox("Living in a Displacement Camp/Crisis Zone?", ["No", "Yes"])
 
-# --------------------------------------------------------
-# PREMIUM USER INTERFACE CONFIGURATION
-# --------------------------------------------------------
-st.set_page_config(page_title="Maternal Home-Shield AI", layout="wide", initial_sidebar_state="expanded")
+binary_map = {"No": 0, "Yes": 0.5 if "First Pregnancy" else 1} # Internal formatting maps
+map_binary = lambda text: 1 if text == "Yes" else 0
 
-CSS_DATA = (
-    "<style>"
-    ".main { background-color: #f8fafc; }"
-    ".metric-card { background-color: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }"
-    ".protocol-box { border-radius: 12px; padding: 1.5rem; margin-top: 1rem; color: #1e293b; }"
-    ".family-box { background-color: #fef2f2; border-left: 5px solid #ef4444; }"
-    ".medic-box { background-color: #f0fdfa; border-left: 5px solid #0d9488; }"
-    "</style>"
-)
-st.markdown(CSS_DATA, unsafe_allow_html=True)
+# Main App Navigation Tabs
+tab_screen, tab_about = st.tabs(["🌤️ Daily Morning & Urgent Screening", "📖 System Instruction Manual"])
 
-# Language Control Hub
+with tab_screen:
+    st.subheader("🛑 Step 1: Check for Feeling Unwell (Symptom Scan)")
+    st.write("Does the mother currently feel unwell or have any of these specific symptoms right now?")
+    
+    col_s1, col_s2 = st.columns(2)
+    with col_s1:
+        s_headache = st.checkbox("❌ Severe, throbbing headache that won't go away")
+        s_vision = st.checkbox("❌ Blurry vision, flashing lights, or dark spots in front of the eyes")
+    with col_s2:
+        s_pain = st.checkbox("❌ Sharp pain right below the ribs or upper stomach area")
+        s_swelling = st.checkbox("❌ Sudden, massive swelling in the face, eyes, or hands")
+
+    st.markdown("---")
+    st.subheader("📈 Step 2: Input Morning Vital Signs")
+    
+    col_v1, col_v2 = st.columns(2)
+    with col_v1:
+        systolic = st.number_input("Systolic Blood Pressure (Top Reading from Cuff mmHg)", min_value=70, max_value=220, value=115)
+        diastolic = st.number_input("Diastolic Blood Pressure (Bottom Reading from Cuff mmHg)", min_value=40, max_value=140, value=75)
+    with col_v2:
+        st.markdown("**Urine Paper Strip Color Match:**")
+        urine_score = st.radio(
+            "Match the dipped morning paper strip color to the kit card options:",
+            options=[
+                "0: Yellow / Light Yellow (Negative / Normal)",
+                "1: Light Green (Trace Protein detected)",
+                "2: Medium Green (High Protein detected)",
+                "3: Deep Dark Green (Severe Risk Level)"
+            ]
+        )
+
+    # Process metrics values internally
+    protein_numeric = float(urine_score.split(":")[0])
+    symptom_active = s_headache or s_vision or s_pain or s_swelling
+    
+    st.markdown("---")
+    
+    if st.button("🔍 RUN EMERGENCY RISK CALCULATION", use_container_width=True):
+        
+        # Structure payload vector matching the random forest format requirements
+        input_vector = pd.DataFrame([{
+            'age': age,
+            'first_pregnancy': map_binary(first_preg),
+            'twin_pregnancy': map_binary(twins),
+            'history_of_hypertension': map_binary(chronic_hyper),
+            'systolic_bp_week12': float(systolic), # Substituting current systolic tracking value
+            'bmi': 24.5, # Median calculation index filler
+            'proteinuria_trace_strip': 1 if protein_numeric >= 1 else 0,
+            'crisis_displacement_flag': map_binary(displaced)
+        }])
+        
+        raw_prob = float(clinical_engine.predict_proba(input_vector)[:, 1])
+        
+        # Override calculation safety ceiling if severe home red flags are explicitly triggered
+        critical_vitals = (systolic >= 140) or (diastolic >= 90) or (protein_numeric >= 2)
+        is_high_risk = (raw_prob >= 0.28) or symptom_active or critical_vitals
+        
+        st.subheader("📊 Ultimate Risk Assessment Outcome")
+        
+        if is_high_risk:
+            st.error("🚨 CRITICAL ALERT: HIGH RISK OF DEVELOPING PREECLAMPASIA / ECLAMPSIA DETECTED")
+            
+            # Action Plan Framework Split Box
+            act_col1, act_col2 = st.columns(2)
+            with act_col1:
+                st.markdown("""
+                ### 🚨 IMMEDIATE ACTION PLAN (For the Family)
+                1. **GET TO A HOSPITAL IMMEDIATELY:** Do not wait. Leave the house right away. Preeclampsia is a fast-acting emergency.
+                2. **DO NOT LAY FLAT ON YOUR BACK:** If resting while waiting for transportation, lay on your **left side**. This improves blood flow to the baby and kidneys.
+                3. **STAY CALM & REDUCE LIGHTS:** High blood pressure mixed with stress can trigger seizures. Keep the mother in a quiet, dark area while moving.
+                """)
+            with act_col2:
+                st.markdown("""
+                ### 🏥 CLINICAL INTERVENTION PROTOCOL (For Field Medics)
+                * **Antihypertensive Administration:** Prepare safe emergency blood pressure medications (e.g., oral Labetalol or Nifedipine) if systolic is $\ge$ 160 or diastolic is $\ge$ 110.
+                * **Seizure Prophylaxis:** Administer an immediate loading dose of **Magnesium Sulfate (MgSO4)** intravenously/intramuscularly to prevent eclamptic seizures.
+                * **Delivery Planning:** Assess gestational age. If the pregnancy is past 37 weeks, prepare for urgent delivery to save both lives.
+                """)
+        else:
+            st.success("✅ STABLE TRACK: SCREENING COMPLETED SUCCESSFULLY")
+            st.markdown("""
+            **Next Actions:**
+            * Everything looks normal this morning.
+            * **Repeat this test tomorrow morning** at the exact same time.
+            * **CRITICAL RULE:** If the mother feels unwell later today (headache, vision changes, or pain), do not wait for tomorrow. **Run this screening test again immediately.**
+            """)
+
+with tab_about:
+    st.subheader("📋 Low-Resource Home Triage Manual")
+    st.markdown("""
+    ### How to Use the At-Home Kit in Displacement Settings
+    
+    1. **The Morning Routine:** Every morning, before eating or walking around, the mother should sit quietly for 5 minutes, then take her blood pressure. 
+    2. **The Dipstick Method:** Collect a tiny amount of urine in a clean cup. Dip the paper strip for 2 seconds. Shake off excess fluid. Wait 60 seconds, then match the color to the cardboard reference strip.
+    3. **The Unwell Trigger:** Preeclampsia does not care about schedules. If a mother says *'I feel strange'* or complains of a headache, her family must run this app immediately.
+    """)
