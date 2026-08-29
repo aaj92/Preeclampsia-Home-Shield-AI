@@ -63,9 +63,9 @@ LANG_DICT = {
         "prob_label": "Calculated Statistical Onset Probability",
         "awaiting_inputs": "Awaiting input initialization metrics panel. Complete and execute Step 1 & 2 to populate diagnostic triage response logs.",
         "stable_header": "✅ SYSTEM RISK CLASSIFICATION: STABLE TRACK",
-        "stable_txt": "Patient is tracking within safe algorithmic norms. Secure regular checkup intervals.<br><b>CRITICAL INSTRUCTION:</b> If maternal headaches, vision spots, or acute right side stomach discomfort manifest later today, rerunning this triage assessment module immediately is mandatory.",
+        "stable_txt": "Patient is tracking within safe algorithmic norms. Secure regular checkup intervals.<br><b>CRITICAL INSTRUCTION:</b> If maternal headaches, vision spots, or acute right side[...]",
         "family_header": "🚨 IMMEDIATE HOUSEHOLD EMERGENCY ACTIONS",
-        "family_txt": "1. <b>EVACUATE TO CLINIC IMMEDIATELY:</b> Do not wait for appointments. Leave now.<br>2. <b>REST ON LEFT SIDE ONLY:</b> Avoid flat back postures to sustain uterine and renal vascular flows.<br>3. <b>MINIMIZE VISUAL STIMULI:</b> Keep rooms dim and quiet. Sensory stress drops seizure thresholds under hypertensive states.",
+        "family_txt": "1. <b>EVACUATE TO CLINIC IMMEDIATELY:</b> Do not wait for appointments. Leave now.<br>2. <b>REST ON LEFT SIDE ONLY:</b> Avoid flat back postures to sustain uterine and renal[...]",
         "medic_header": "🏥 CRITICAL ECLAMPSIA MANAGEMENT INTEGRATION PROTOCOLS",
         "medic_txt": """
         <ul>
@@ -122,9 +122,9 @@ LANG_DICT = {
         "prob_label": "Probabilité Statistique de Début Calculée",
         "awaiting_inputs": "En attente des paramètres d'initialisation. Remplissez les étapes 1 et 2 pour afficher le plan de triage.",
         "stable_header": "✅ CLASSIFICATION DU RISQUE SYSTEME : SUIVI STABLE",
-        "stable_txt": "La patiente suit des normes algorithmiques sûres. Planifiez des examens réguliers.<br><b>INSTRUCTION CRITIQUE :</b> Si des maux de tête maternels, des troubles visuels ou une douleur aiguë à l'estomac droit apparaissent plus tard aujourd'hui, réexécutez ce module immédiatement.",
+        "stable_txt": "La patiente suit des normes algorithmiques sûres. Planifiez des examens réguliers.<br><b>INSTRUCTION CRITIQUE :</b> Si des maux de tête maternels, des troubles visuels o[...]",
         "family_header": "🚨 ACTIONS D'URGENCE IMMÉDIATES POUR LA FAMILLE",
-        "family_txt": "1. <b>ÉVACUER IMMÉDIATEMENT À LA CLINIQUE :</b> N'attendez pas de rendez-vous. Partez maintenant.<br>2. <b>REPOS SUR LE CÔTÉ GAUCHE UNIQUEMENT :</b> Évitez de vous allonger sur le dos pour maintenir les flux sanguins rénaux.<br>3. <b>MINIMISER LES STIMULI VISUELS :</b> Gardez les pièces sombres et calmes pour prévenir les crises.",
+        "family_txt": "1. <b>ÉVACUER IMMÉDIATEMENT À LA CLINIQUE :</b> N'attendez pas de rendez-vous. Partez maintenant.<br>2. <b>REPOS SUR LE CÔTÉ GAUCHE UNIQUEMENT :</b> Évitez de vous al[...]",
         "medic_header": "🏥 PROTOCOLES CRITIQUES DE GESTION DE L'ÉCLAMPSIE",
         "medic_txt": """
         <ul>
@@ -157,59 +157,22 @@ LANG_DICT = {
 st.set_page_config(page_title="Maternal Home-Shield AI", layout="wide", initial_sidebar_state="expanded")
 
 # Inject Custom High-End CSS Styling
-st.markdown("""
-    <style>
-        @import url('https://googleapis.com');
-        html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-        .main { background-color: #f8fafc; }
-    'step1_caption': {'en': 'Check all active discomfort vectors expressed or experienced by the mother right now:',
-                      'fr': "Cochez tous les facteurs d'inconfort exprimés ou ressentis par la mère en ce moment :",
-                      'pcm': 'Tick all di wah body pain or wah di mama dey feel now:'},
-    'headache': {'en': 'Severe, throbbing persistent headache', 'fr': 'Maux de tête sévères et persistants', 'pcm': 'Bad head pain weh no stop'},
-    'vision': {'en': 'Blurry vision / flashing dark spots', 'fr': 'Vision floue / taches sombres clignotantes', 'pcm': 'Vision blurry or dark spot dey flash'},
-    'pain': {'en': 'Sharp upper right abdominal/rib pain', 'fr': 'Douleur abdominale/aux côtes supérieures droites aiguë', 'pcm': 'Sharp pain for right side of belle/rib'},
-    'swelling': {'en': 'Sudden swelling of face, eyes, or hands', 'fr': 'Gonflement soudain du visage, des yeux ou des mains', 'pcm': 'Face, eye or hand swell quick'},
-    'step2': {'en': '📈 Step 2: Clinical Vitals & Urine Strips', 'fr': '📈 Étape 2 : Signes vitaux cliniques et bandelettes urinaires', 'pcm': '📈 Step 2: Vitals and Urine Strip'},
-    'systolic': {'en': 'Systolic Pressure (Top Cuff Number - mmHg)', 'fr': 'Pression systolique (mmHg)', 'pcm': 'Systolic Pressure'},
-    'diastolic': {'en': 'Diastolic Pressure (Bottom Cuff Number - mmHg)', 'fr': 'Pression diastolique (mmHg)', 'pcm': 'Diastolic Pressure'},
-    'urine_score': {'en': 'Dipstick Card Color Matching Scale:', 'fr': 'Échelle de correspondance des couleurs de la bandelette :', 'pcm': 'Dipstick color scale'},
-    'execute': {'en': '🚀 EXECUTE CLINICAL ASSESSMENT RUN', 'fr': "🚀 EXÉCUTER L'ÉVALUATION CLINIQUE", 'pcm': '🚀 RUN ASSESSMENT'},
-    'calculated': {'en': 'Calculated Statistical Onset Probability', 'fr': "Probabilité calculée d'apparition", 'pcm': 'Calculated Onset Probability'},
-    'immediate_actions_title': {'en': '🚨 IMMEDIATE HOUSEHOLD EMERGENCY ACTIONS', 'fr': "🚨 ACTIONS D'URGENCE IMMÉDIATES", 'pcm': '🚨 EMERGENCY ACTIONS'},
-    'stable_track': {'en': '✅ SYSTEM RISK CLASSIFICATION: STABLE TRACK', 'fr': '✅ CLASSIFICATION DU RISQUE : SUIVI STABLE', 'pcm': '✅ SYSTEM SAY: STABLE'},
-    'awaiting': {'en': 'Awaiting input initialization metrics panel. Complete and execute Step 1 & 2 to populate diagnostic triage response logs.',
-                 'fr': "En attente de l'initialisation des métriques. Complétez et exécutez l'étape 1 et 2.",
-                 'pcm': 'Waiting for input. Do Step 1 & 2 then run.'}
-}
-
-def t(key, lang='en'):
-    return TRANSLATIONS.get(key, {}).get(lang, TRANSLATIONS.get(key, {}).get('en', key))
-
-# --------------------------------------------------------
-# PREMIUM USER INTERFACE CONFIGURATION
-# --------------------------------------------------------
-st.set_page_config(page_title="Maternal Home-Shield AI", layout="wide", initial_sidebar_state="expanded")
-
-# Inject Custom CSS Styling for a High-End Clinical Visual Presentation
-st.markdown("""
+st.markdown(r"""
     <style>
         @import url('https://googleapis.com');
         html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
         .main { background-color: #f8fafc; }
         div[data-testid="stSidebarUserContent"] { background-color: #0f172a; color: #ffffff; }
         .stButton>button { 
-            background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%); 
-            color: white; border: none; font-weight: 600; 
-            padding: 0.6rem 2rem; border-radius: 8px; transition: all 0.3s;
+            background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%) !important; 
+            color: white !important; border: none !important; font-weight: 600 !important; 
+            padding: 0.6rem 2rem !important; border-radius: 8px !important; transition: all 0.3s !important;
         }
-        .stButton>button:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(13,148,136,0.3); }
-        .metric-card { 
-            background-color: white; border-radius: 12px; padding: 1.5rem; 
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; 
-        }
+        .stButton>button:hover { transform: translateY(-2px) !important; box-shadow: 0 4px 12px rgba(13,148,136,0.3) !important; }
+        .metric-card { background-color: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
         .protocol-box { border-radius: 12px; padding: 1.5rem; margin-top: 1rem; color: #1e293b; }
         .family-box { background-color: #fef2f2; border-left: 5px solid #ef4444; }
-        .medical-box { background-color: #f0fdfa; border-left: 5px solid #0d9488; }
+        .medic-box { background-color: #f0fdfa; border-left: 5px solid #0d9488; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -372,9 +335,9 @@ with tab_screen:
                     <div class='protocol-box medical-box'>
                       <h4>🏥 EMERGENCY MEDICAL RESPONSE (Key points)</h4>
                       <ul>
-                        <li><b>Anticonvulsant — Magnesium sulfate</b>: Pritchard (IM+IV) — loading 4 g IV slow + 10 g IM (5 g each buttock); then 5 g IM every 4 h; or Zuspan (IV) — loading 4 g I[...]
-                        <li><b>Monitoring:</b> Respiratory rate and deep‑tendon reflexes hourly; urine output hourly (alert if &lt;25–30 mL/h); continuous BP and fetal monitoring as available.</li[...]
-                        <li><b>Toxicity — immediate actions:</b> If absent reflexes, RR &lt; 12/min, or oliguria → stop MgSO4, give calcium gluconate 10 mL of 10% (1 g) IV slowly, provide respirat[...]
+                        <li><b>Anticonvulsant — Magnesium sulfate</b>: Pritchard (IM+IV) — loading 4 g IV slow + 10 g IM (5 g each buttock); then 5 g IM every 4 h; or Zuspan (IV) — loading [...]
+                        <li><b>Monitoring:</b> Respiratory rate and deep‑tendon reflexes hourly; urine output hourly (alert if &lt;25–30 mL/h); continuous BP and fetal monitoring as available[...]
+                        <li><b>Toxicity — immediate actions:</b> If absent reflexes, RR &lt; 12/min, or oliguria → stop MgSO4, give calcium gluconate 10 mL of 10% (1 g) IV slowly, provide res[...]
                         <li><b>Duration:</b> Continue for 24 hours after last seizure or after delivery (whichever is later).</li>
                         <li><b>Practical:</b> Confirm local MgSO4 concentration before converting g → mL (example: 50% = 500 mg/mL → 4 g = 8 mL); keep calcium gluconate at bedside.</li>
                       </ul>
@@ -383,7 +346,7 @@ with tab_screen:
                 else:
                     st.markdown(f"<div class='protocol-box medical-box' style='border-left-color: #0d9488;'><h4>{t('stable_track', lang_key)}</h4>"
                                 "Patient is tracking within safe algorithmic norms. Secure regular checkup intervals.<br>"
-                                "<b>CRITICAL INSTRUCTION:</b> If maternal headaches, vision spots, or acute right side stomach discomfort manifest later today, rerunning this triage assessment module [...]</div>", unsafe_allow_html=True)
+                                "<b>CRITICAL INSTRUCTION:</b> If maternal headaches, vision spots, or acute right side stomach discomfort manifest later today, rerunning this triage assessment mo[...]")
         else:
             st.info(t('awaiting', lang_key))
 
@@ -392,6 +355,6 @@ with tab_manual:
     st.markdown("""
     ### System Workflow Synchronization Overview
     1. **The Baselines Matrix:** Use the structural sidebar panels to input background genetic, demographic, and geographical contexts before reviewing ongoing parameters.
-    2. **Urine Protein Testing Cards:** Dip standard validation testing strip layers inside early morning urine samples. Align color gradients closely with reference panels, logging results as numeric[...]
-    3. **The Unwell Override Protocol:** Preeclampsia operates on variable timelines. Any single warning sign checkbox trigger enforces a clinical high-risk output flag automatically to protect human [...]
+    2. **Urine Protein Testing Cards:** Dip standard validation testing strip layers inside early morning urine samples. Align color gradients closely with reference panels, logging results as nu[...]
+    3. **The Unwell Override Protocol:** Preeclampsia operates on variable timelines. Any single warning sign checkbox trigger enforces a clinical high-risk output flag automatically to protect h[...]
     """, unsafe_allow_html=True)
