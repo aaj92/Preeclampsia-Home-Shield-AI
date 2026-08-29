@@ -27,121 +27,117 @@ except FileNotFoundError:
     st.stop()
 
 # --------------------------------------------------------
-# INTERACTIVE UI FRAMEWORK
+# GLOBAL DICTIONARY DATA SYSTEM (PREVENTS PARSING ERRORS)
 # --------------------------------------------------------
-st.set_page_config(page_title="Home Maternal Triage Shield", layout="wide")
-
-st.title("🏡 Maternal Home-Shield Triage System")
-st.markdown("### Daily Offline Risk Assessment & Emergency Action Protocol")
-st.markdown("---")
-
-# Setup Sidebar Context for Personal Baseline
-st.sidebar.header("👤 Mother's Baseline Profile")
-age = st.sidebar.slider("Age", 14, 50, 25)
-first_preg = st.sidebar.selectbox("First Pregnancy?", ["No", "Yes"])
-twins = st.sidebar.selectbox("Carrying Twins?", ["No", "Yes"])
-chronic_hyper = st.sidebar.selectbox("History of Chronic High Blood Pressure?", ["No", "Yes"])
-displaced = st.sidebar.selectbox("Living in a Displacement Camp/Crisis Zone?", ["No", "Yes"])
-
-binary_map = {"No": 0, "Yes": 0.5 if "First Pregnancy" else 1} # Internal formatting maps
-map_binary = lambda text: 1 if text == "Yes" else 0
-
-# Main App Navigation Tabs
-tab_screen, tab_about = st.tabs(["🌤️ Daily Morning & Urgent Screening", "📖 System Instruction Manual"])
-
-with tab_screen:
-    st.subheader("🛑 Step 1: Check for Feeling Unwell (Symptom Scan)")
-    st.write("Does the mother currently feel unwell or have any of these specific symptoms right now?")
-    
-    col_s1, col_s2 = st.columns(2)
-    with col_s1:
-        s_headache = st.checkbox("❌ Severe, throbbing headache that won't go away")
-        s_vision = st.checkbox("❌ Blurry vision, flashing lights, or dark spots in front of the eyes")
-    with col_s2:
-        s_pain = st.checkbox("❌ Sharp pain right below the ribs or upper stomach area")
-        s_swelling = st.checkbox("❌ Sudden, massive swelling in the face, eyes, or hands")
-
-    st.markdown("---")
-    st.subheader("📈 Step 2: Input Morning Vital Signs")
-    
-    col_v1, col_v2 = st.columns(2)
-    with col_v1:
-        systolic = st.number_input("Systolic Blood Pressure (Top Reading from Cuff mmHg)", min_value=70, max_value=220, value=115)
-        diastolic = st.number_input("Diastolic Blood Pressure (Bottom Reading from Cuff mmHg)", min_value=40, max_value=140, value=75)
-    with col_v2:
-        st.markdown("**Urine Paper Strip Color Match:**")
-        urine_score = st.radio(
-            "Match the dipped morning paper strip color to the kit card options:",
-            options=[
-                "0: Yellow / Light Yellow (Negative / Normal)",
-                "1: Light Green (Trace Protein detected)",
-                "2: Medium Green (High Protein detected)",
-                "3: Deep Dark Green (Severe Risk Level)"
-            ]
+LANG_DICT = {
+    "English": {
+        "title": "🏡 Maternal Home-Shield Triage System",
+        "subtitle": "### Daily Offline Risk Assessment & Emergency Action Protocol",
+        "sidebar_title": "👤 Mother's Baseline Profile",
+        "age": "Age",
+        "first_preg": "First Pregnancy?",
+        "twins": "Carrying Twins?",
+        "chronic_hyper": "History of Chronic High Blood Pressure?",
+        "displaced": "Living in a Displacement Camp/Crisis Zone?",
+        "opts": ["No", "Yes"],
+        "tab_screen": "🌤️ Daily Morning & Urgent Screening",
+        "tab_about": "📖 System Instruction Manual",
+        "step1_title": "🛑 Step 1: Check for Feeling Unwell (Symptom Scan)",
+        "step1_txt": "Does the mother currently feel unwell or have any of these specific symptoms right now?",
+        "s1": "❌ Severe, throbbing headache that won't go away",
+        "s2": "❌ Blurry vision, flashing lights, or dark spots in front of the eyes",
+        "s3": "❌ Sharp pain right below the ribs or upper stomach area",
+        "s4": "❌ Sudden, massive swelling in the face, eyes, or hands",
+        "step2_title": "📈 Step 2: Input Morning Vital Signs",
+        "sys_label": "Systolic Blood Pressure (Top Reading from Cuff mmHg)",
+        "dia_label": "Diastolic Blood Pressure (Bottom Reading from Cuff mmHg)",
+        "urine_title": "**Urine Paper Strip Color Match:**",
+        "urine_label": "Match the dipped morning paper strip color to the kit card options:",
+        "u0": "0: Yellow / Light Yellow (Negative / Normal)",
+        "u1": "1: Light Green (Trace Protein detected)",
+        "u2": "2: Medium Green (High Protein detected)",
+        "u3": "3: Deep Dark Green (Severe Risk Level)",
+        "btn": "🔍 RUN EMERGENCY RISK CALCULATION",
+        "out_title": "📊 Ultimate Risk Assessment Outcome",
+        "err_msg": "🚨 CRITICAL ALERT: HIGH RISK OF DEVELOPING PREECLAMPASIA / ECLAMPSIA DETECTED",
+        "act_title": "### 🚨 IMMEDIATE ACTION PLAN (For the Family)",
+        "act_txt": (
+            "1. **GET TO A HOSPITAL IMMEDIATELY:** Do not wait. Leave the house right away. Preeclampsia is a fast-acting emergency.\n"
+            "2. **DO NOT LAY FLAT ON YOUR BACK:** If resting while waiting for transportation, lay on your **left side**. This improves blood flow to the baby and kidneys.\n"
+            "3. **STAY CALM & REDUCE LIGHTS:** High blood pressure mixed with stress can trigger seizures. Keep the mother in a quiet, dark area while moving."
+        ),
+        "cli_title": "### 🏥 CLINICAL INTERVENTION PROTOCOL (For Field Medics)",
+        "cli_txt": (
+            "* **Antihypertensive Administration:** Prepare safe emergency blood pressure medications (e.g., oral Labetalol or Nifedipine) if systolic is >= 160 or diastolic is >= 110.\n"
+            "* **Seizure Prophylaxis:** Administer an immediate loading dose of **Magnesium Sulfate (MgSO4)** intravenously/intramuscularly to prevent eclamptic seizures.\n"
+            "* **Delivery Planning:** Assess gestational age. If the pregnancy is past 37 weeks, prepare for urgent delivery to save both lives."
+        ),
+        "succ_msg": "✅ STABLE TRACK: SCREENING COMPLETED SUCCESSFULLY",
+        "succ_txt": (
+            "**Next Actions:**\n"
+            "* Everything looks normal this morning.\n"
+            "* **Repeat this test tomorrow morning** at the exact same time.\n"
+            "* **CRITICAL RULE:** If the mother feels unwell later today (headache, vision changes, or pain), do not wait for tomorrow. **Run this screening test again immediately.**"
+        ),
+        "man_title": "📋 Low-Resource Home Triage Manual",
+        "man_txt": (
+            "### How to Use the At-Home Kit in Displacement Settings\n\n"
+            "1. **The Morning Routine:** Every morning, before eating or walking around, the mother should sit quietly for 5 minutes, then take her blood pressure.\n"
+            "2. **The Dipstick Method:** Collect a tiny amount of urine in a clean cup. Dip the paper strip for 2 seconds. Shake off excess fluid. Wait 60 seconds, then match the color to the cardboard reference strip.\n"
+            "3. **The Unwell Trigger:** Preeclampsia does not care about schedules. If a mother says *'I feel strange'* or complains of a headache, her family must run this app immediately."
         )
-
-    # Process metrics values internally
-    protein_numeric = float(urine_score.split(":")[0])
-    symptom_active = s_headache or s_vision or s_pain or s_swelling
-    
-    st.markdown("---")
-    
-    if st.button("🔍 RUN EMERGENCY RISK CALCULATION", use_container_width=True):
-        
-        # Structure payload vector matching the random forest format requirements
-        input_vector = pd.DataFrame([{
-            'age': age,
-            'first_pregnancy': map_binary(first_preg),
-            'twin_pregnancy': map_binary(twins),
-            'history_of_hypertension': map_binary(chronic_hyper),
-            'systolic_bp_week12': float(systolic), # Substituting current systolic tracking value
-            'bmi': 24.5, # Median calculation index filler
-            'proteinuria_trace_strip': 1 if protein_numeric >= 1 else 0,
-            'crisis_displacement_flag': map_binary(displaced)
-        }])
-        
-        raw_prob = float(clinical_engine.predict_proba(input_vector)[:, 1])
-        
-        # Override calculation safety ceiling if severe home red flags are explicitly triggered
-        critical_vitals = (systolic >= 140) or (diastolic >= 90) or (protein_numeric >= 2)
-        is_high_risk = (raw_prob >= 0.28) or symptom_active or critical_vitals
-        
-        st.subheader("📊 Ultimate Risk Assessment Outcome")
-        
-        if is_high_risk:
-            st.error("🚨 CRITICAL ALERT: HIGH RISK OF DEVELOPING PREECLAMPASIA / ECLAMPSIA DETECTED")
-            
-            # Action Plan Framework Split Box
-            act_col1, act_col2 = st.columns(2)
-            with act_col1:
-                st.markdown("""
-                ### 🚨 IMMEDIATE ACTION PLAN (For the Family)
-                1. **GET TO A HOSPITAL IMMEDIATELY:** Do not wait. Leave the house right away. Preeclampsia is a fast-acting emergency.
-                2. **DO NOT LAY FLAT ON YOUR BACK:** If resting while waiting for transportation, lay on your **left side**. This improves blood flow to the baby and kidneys.
-                3. **STAY CALM & REDUCE LIGHTS:** High blood pressure mixed with stress can trigger seizures. Keep the mother in a quiet, dark area while moving.
-                """)
-            with act_col2:
-                st.markdown("""
-                ### 🏥 CLINICAL INTERVENTION PROTOCOL (For Field Medics)
-                * **Antihypertensive Administration:** Prepare safe emergency blood pressure medications (e.g., oral Labetalol or Nifedipine) if systolic is $\ge$ 160 or diastolic is $\ge$ 110.
-                * **Seizure Prophylaxis:** Administer an immediate loading dose of **Magnesium Sulfate (MgSO4)** intravenously/intramuscularly to prevent eclamptic seizures.
-                * **Delivery Planning:** Assess gestational age. If the pregnancy is past 37 weeks, prepare for urgent delivery to save both lives.
-                """)
-        else:
-            st.success("✅ STABLE TRACK: SCREENING COMPLETED SUCCESSFULLY")
-            st.markdown("""
-            **Next Actions:**
-            * Everything looks normal this morning.
-            * **Repeat this test tomorrow morning** at the exact same time.
-            * **CRITICAL RULE:** If the mother feels unwell later today (headache, vision changes, or pain), do not wait for tomorrow. **Run this screening test again immediately.**
-            """)
-
-with tab_about:
-    st.subheader("📋 Low-Resource Home Triage Manual")
-    st.markdown("""
-    ### How to Use the At-Home Kit in Displacement Settings
-    
-    1. **The Morning Routine:** Every morning, before eating or walking around, the mother should sit quietly for 5 minutes, then take her blood pressure. 
-    2. **The Dipstick Method:** Collect a tiny amount of urine in a clean cup. Dip the paper strip for 2 seconds. Shake off excess fluid. Wait 60 seconds, then match the color to the cardboard reference strip.
-    3. **The Unwell Trigger:** Preeclampsia does not care about schedules. If a mother says *'I feel strange'* or complains of a headache, her family must run this app immediately.
-    """)
+    },
+    "Français": {
+        "title": "🏡 Système de Triage Maternelle à Domicile",
+        "subtitle": "### Évaluation Quotidienne du Risque Hors-Ligne et Protocole d'Urgence",
+        "sidebar_title": "👤 Profil de Base de la Mère",
+        "age": "Âge",
+        "first_preg": "Première Grossesse ?",
+        "twins": "Grossesse Gémellaire ?",
+        "chronic_hyper": "Antécédents d'Hypertension Artérielle Chronique ?",
+        "displaced": "Vit dans un Camp de Réfugiés / Zone de Crise ?",
+        "opts": ["Non", "Oui"],
+        "tab_screen": "🌤️ Évaluation Quotidienne et Urgente",
+        "tab_about": "📖 Manuel d'Instructions du Système",
+        "step1_title": "🛑 Étape 1 : Vérification des Symptômes (Malaise)",
+        "step1_txt": "La mère se sent-elle actuellement mal ou présente-t-elle l'un de ces symptômes en ce moment ?",
+        "s1": "❌ Maux de tête graves et lancinants qui ne disparaissent pas",
+        "s2": "❌ Vision floue, lumières clignotantes ou taches sombres devant les yeux",
+        "s3": "❌ Douleur aiguë juste sous les côtes ou dans la zone supérieure de l'estomac",
+        "s4": "❌ Gonflement soudain et massif du visage, des yeux ou des mains",
+        "step2_title": "📈 Étape 2 : Saisir les Signes Vitaux du Matin",
+        "sys_label": "Pression Systolique (Chiffre Supérieur du Brassard - mmHg)",
+        "dia_label": "Pression Diastolique (Chiffre Inférieur du Brassard - mmHg)",
+        "urine_title": "**Correspondance des Couleurs de la Bandelette :**",
+        "urine_label": "Faites correspondre la couleur de la bandelette urinaire du matin aux options de la carte :",
+        "u0": "0 : Jaune / Jaune Clair (Négatif / Normal)",
+        "u1": "1 : Vert Clair (Traces de protéines détectées)",
+        "u2": "2 : Vert Moyen (Taux de protéines élevé détecté)",
+        "u3": "3 : Vert Foncé (Niveau de risque grave)",
+        "btn": "🔍 LANCER LE CALCUL DU RISQUE D'URGENCE",
+        "out_title": "📊 Résultat de l'Évaluation Finale du Risque",
+        "err_msg": "🚨 ALERTE CRITIQUE : RISQUE ÉLEVÉ DE PRÉÉCLAMPSIE / ÉCLAMPSIE DÉTECTÉ",
+        "act_title": "### 🚨 PLAN D'ACTION IMMÉDIAT (Pour la Famille)",
+        "act_txt": (
+            "1. **RENDEZ-VOUS IMMÉDIATEMENT À L'HÔPITAL :** N'attendez pas. Partez tout de suite. La prééclampsie est une urgence à évolution rapide.\n"
+            "2. **NE VOUS ALLONGEZ PAS SUR LE DOS :** Si vous vous reposez en attendant le transport, allongez-vous sur le **côté gauche**. Cela améliore le flux sanguin vers le bébé et les reins.\n"
+            "3. **RESTEZ CALME ET RÉDUISEZ LA LUMIÈRE :** Une tension artérielle élevée combinée au stress peut déclencher des crises. Gardez la mère dans un endroit calme et sombre pendant le déplacement."
+        ),
+        "cli_title": "### 🏥 PROTOCOLE D'INTERVENTION CLINIQUE (Pour les Médicaux sur le Terrain)",
+        "cli_txt": (
+            "* **Administration d'Antihypertenseurs :** Préparer des médicaments sûrs pour la tension artérielle d'urgence (ex. Labétalol oral ou Nifédipine) si la systolique est >= 160 ou la diastolique est >= 110.\n"
+            "* **Prophylaxie des Crises :** Administrer immédiatement une dose de charge de **Sulfate de Magnésium (MgSO4)** par voie intraveineuse/intramusculaire pour prévenir les crises d'éclampsie.\n"
+            "* **Planification de l'Accouchement :** Évaluer l'âge gestationnel. Si la grossesse dépasse 37 semaines, préparer un accouchement urgent pour sauver les deux vies."
+        ),
+        "succ_msg": "✅ SUIVI STABLE : ÉVALUATION TERMINÉE AVEC SUCCÈS",
+        "succ_txt": (
+            "**Actions Suivantes :**\n"
+            "* Tout semble normal ce matin.\n"
+            "* **Répétez ce test demain matin** exactement à la même heure.\n"
+            "* **RÈGLE CRITIQUE :** Si la mère se sent mal plus tard aujourd'hui (maux de tête, changements de vision ou douleur), n'attendez pas demain. **Refaites ce test de dépistage immédiatement.**"
+        ),
+        "man_title": "📋 Manuel de Triage à Domicile (Faibles Ressources)",
+        "man_txt": (
+            "### Comment Utiliser le Kit à Domicile en Contexte de Crise\n\n"
+            "1. **La Routine du Matin :** Chaque matin, avant de manger ou de marcher, la mère doit s'asseoir calmement pendant 5 minutes, puis prendre sa tension artérielle.\n"
+            "2. **La Méthode de la Bandelette :** Recueillir une petite quantité d'urine dans un gobelet propre. Tremper la bandelette de papier pendant 2 secondes. Secouer l'excès de liquide. Attendre 60 secondes, puis faire correspondre la couleur à la bandelette de référence en carton.\n"
