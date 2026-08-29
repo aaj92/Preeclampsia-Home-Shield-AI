@@ -53,15 +53,25 @@ TRANSLATIONS = {
         "high_risk_desc": "Immediate medical evaluation required",
         "risk_percentage": "Preeclampsia Risk Score",
         "action_plan": "Recommended Actions",
-        "family_actions": "Family Should:",
+        "family_actions": "Family Actions",
         "action_1": "Proceed to hospital without delay",
         "action_2": "Rest on left side to improve blood flow",
         "action_3": "Keep in quiet environment; minimize stress",
         
-        "medical_protocol": "Medical Team Protocol:",
-        "medical_1": "Monitor blood pressure continuously",
-        "medical_2": "Prepare magnesium sulfate (seizure prophylaxis)",
-        "medical_3": "Prepare for possible urgent delivery after 37 weeks",
+        "medical_response": "EMERGENCY MEDICAL RESPONSE (Key Points)",
+        "medical_anticonvulsant": "Anticonvulsant — Magnesium Sulfate",
+        "medical_loading": "Loading dose: 4-6 g IV slow over 20-30 minutes",
+        "medical_maintenance": "Maintenance: 1-2 g/hour IV infusion OR 5 g IM every 4 hours",
+        "medical_monitoring": "Monitoring",
+        "medical_monitor_vitals": "Respiratory rate and patellar reflexes hourly; urine output hourly (alert if <25-30 mL/h)",
+        "medical_monitor_bp": "Continuous blood pressure and fetal monitoring as available",
+        "medical_toxicity": "Toxicity — Immediate Actions",
+        "medical_toxicity_text": "If absent reflexes, RR <12/min, or oliguria → stop MgSO4; give calcium gluconate 10 mL of 10% (1 g) IV slowly",
+        "medical_toxicity_support": "Provide respiratory support and call senior help immediately",
+        "medical_duration": "Duration",
+        "medical_duration_text": "Continue for 24 hours after last seizure or after delivery (whichever is later)",
+        "medical_practical": "Practical Notes",
+        "medical_practical_text": "Confirm local MgSO4 concentration before converting; keep calcium gluconate at bedside; use strict sterile technique",
         
         "low_risk": "LOW RISK: Screening Completed",
         "low_risk_desc": "No acute risk indicators detected",
@@ -140,15 +150,25 @@ TRANSLATIONS = {
         "high_risk_desc": "Évaluation médicale immédiate requise",
         "risk_percentage": "Score de Risque de Prééclampsie",
         "action_plan": "Actions Recommandées",
-        "family_actions": "La Famille Doit:",
+        "family_actions": "Actions de la Famille",
         "action_1": "Se rendre à l'hôpital sans délai",
         "action_2": "Reposer sur le côté gauche pour améliorer la circulation",
         "action_3": "Maintenir un environnement calme; minimiser le stress",
         
-        "medical_protocol": "Protocole pour l'Équipe Médicale:",
-        "medical_1": "Surveiller la pression artérielle en continu",
-        "medical_2": "Préparer le sulfate de magnésium (prophylaxie des crises)",
-        "medical_3": "Préparer un accouchement d'urgence possible après 37 semaines",
+        "medical_response": "RÉPONSE MÉDICALE D'URGENCE (Points Clés)",
+        "medical_anticonvulsant": "Anticonvulsivant — Sulfate de Magnésium",
+        "medical_loading": "Dose de charge: 4-6 g IV lent sur 20-30 minutes",
+        "medical_maintenance": "Entretien: 1-2 g/heure IV en perfusion OU 5 g IM toutes les 4 heures",
+        "medical_monitoring": "Surveillance",
+        "medical_monitor_vitals": "Fréquence respiratoire et réflexes patellaires toutes les heures; débit urinaire horaire (alerte si <25-30 mL/h)",
+        "medical_monitor_bp": "Surveillance continue de la PA et monitorage fœtal si disponible",
+        "medical_toxicity": "Toxicité — Actions Immédiates",
+        "medical_toxicity_text": "Si réflexes absents, FR <12/min, ou oligurie → arrêter MgSO4; donner gluconate de calcium 10 mL de 10% (1 g) IV lentement",
+        "medical_toxicity_support": "Fournir un soutien respiratoire et appeler l'aide senior immédiatement",
+        "medical_duration": "Durée",
+        "medical_duration_text": "Continuer pendant 24 heures après la dernière crise ou après l'accouchement (le plus tard)",
+        "medical_practical": "Notes Pratiques",
+        "medical_practical_text": "Confirmer la concentration locale de MgSO4 avant la conversion; garder le gluconate de calcium à côté du lit; utiliser une technique stérile stricte",
         
         "low_risk": "RISQUE FAIBLE: Dépistage Terminé",
         "low_risk_desc": "Aucun indicateur de risque aigu détecté",
@@ -254,6 +274,46 @@ st.markdown("""
         .risk-percentage-low {
             color: #2ca02c;
             background-color: rgba(44, 160, 44, 0.1);
+        }
+        .medical-card {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-left: 5px solid #006064;
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .medical-section-title {
+            color: #00497a;
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #00b4d8;
+        }
+        .medical-subsection {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background-color: rgba(255,255,255,0.7);
+            border-radius: 6px;
+            border-left: 3px solid #0096d1;
+        }
+        .medical-subsection-title {
+            color: #00497a;
+            font-weight: bold;
+            font-size: 1em;
+            margin-bottom: 0.5rem;
+        }
+        .medical-text {
+            color: #1a1a1a;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+        .medical-bullet {
+            margin-left: 1rem;
+            margin-bottom: 0.5rem;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -389,21 +449,63 @@ with tab_screening:
                 </div>
             """, unsafe_allow_html=True)
             
-            risk_col1, risk_col2 = st.columns(2)
+            # Family Actions Section
+            family_col, medical_col = st.columns(2)
             
-            with risk_col1:
+            with family_col:
                 with st.container(border=True):
                     st.markdown(f"### {t('family_actions')}")
-                    st.markdown(f"1. **{t('action_1')}**")
-                    st.markdown(f"2. **{t('action_2')}**")
-                    st.markdown(f"3. **{t('action_3')}**")
+                    st.markdown(f"✓ {t('action_1')}")
+                    st.markdown(f"✓ {t('action_2')}")
+                    st.markdown(f"✓ {t('action_3')}")
             
-            with risk_col2:
-                with st.container(border=True):
-                    st.markdown(f"### {t('medical_protocol')}")
-                    st.markdown(f"• {t('medical_1')}")
-                    st.markdown(f"• {t('medical_2')}")
-                    st.markdown(f"• {t('medical_3')}")
+            with medical_col:
+                st.markdown("")  # Spacer
+            
+            # Professional Medical Response Card
+            st.markdown(f"""
+                <div class='medical-card'>
+                    <h2 style='text-align: center; color: #00497a; margin-bottom: 1.5rem;'>
+                        🏥 {t('medical_response')}
+                    </h2>
+                    
+                    <div class='medical-section-title'>{t('medical_anticonvulsant')}</div>
+                    <div class='medical-subsection'>
+                        <div class='medical-subsection-title'>Loading Phase:</div>
+                        <div class='medical-text'>• {t('medical_loading')}</div>
+                    </div>
+                    <div class='medical-subsection'>
+                        <div class='medical-subsection-title'>Maintenance Phase:</div>
+                        <div class='medical-text'>• {t('medical_maintenance')}</div>
+                    </div>
+                    
+                    <div class='medical-section-title'>{t('medical_monitoring')}</div>
+                    <div class='medical-subsection'>
+                        <div class='medical-text'>
+                            • {t('medical_monitor_vitals')}<br>
+                            • {t('medical_monitor_bp')}
+                        </div>
+                    </div>
+                    
+                    <div class='medical-section-title' style='color: #d62728;'>{t('medical_toxicity')}</div>
+                    <div class='medical-subsection' style='background-color: rgba(214, 39, 40, 0.08); border-left-color: #d62728;'>
+                        <div class='medical-text'>
+                            {t('medical_toxicity_text')}<br><br>
+                            {t('medical_toxicity_support')}
+                        </div>
+                    </div>
+                    
+                    <div class='medical-section-title'>{t('medical_duration')}</div>
+                    <div class='medical-subsection'>
+                        <div class='medical-text'>• {t('medical_duration_text')}</div>
+                    </div>
+                    
+                    <div class='medical-section-title'>{t('medical_practical')}</div>
+                    <div class='medical-subsection'>
+                        <div class='medical-text'>✓ {t('medical_practical_text')}</div>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
         
         else:
             # Low Risk Display
@@ -418,9 +520,9 @@ with tab_screening:
             
             with st.container(border=True):
                 st.markdown(f"### {t('next_steps')}")
-                st.markdown(f"• {t('next_1')}")
-                st.markdown(f"• {t('next_2')}")
-                st.markdown(f"• {t('next_3')}")
+                st.markdown(f"✓ {t('next_1')}")
+                st.markdown(f"✓ {t('next_2')}")
+                st.markdown(f"✓ {t('next_3')}")
 
 with tab_manual:
     st.subheader(t("manual_title"))
