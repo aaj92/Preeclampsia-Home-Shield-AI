@@ -163,10 +163,13 @@ with tab_screen:
                                 "2. <b>REST ON LEFT SIDE ONLY:</b> Avoid flat back postures to sustain uterine and renal vascular flows.<br>"
                                 "3. <b>MINIMIZE VISUAL STIMULI:</b> Keep rooms dim and quiet. Sensory stress drops seizure thresholds under hypertensive states.</div>", unsafe_allow_html=True)
                     
-                    st.markdown("<div class='protocol-box medical-box'><h4>🏥 EMERGENCY MEDICAL RESPONSE SEQUENCES</h4>"
-                                "• <b>Vascular Control:</b> Administer oral Labetalol or fast-acting Nifedipine immediately if Systolic ≥ 160 mmHg.<br>"
-                                "• <b>Seizure Blockades:</b> Deploy full <b>Magnesium Sulfate (MgSO4)</b> loading protocols.<br>"
-                                "• <b>Obstetric Clearance:</b> Assess fetal maturity parameters. Prepare logistics for stabilization or active triage transport.</div>", unsafe_allow_html=True)
+                    st.markdown("<div class='protocol-box medical-box'><h4>🏥 EMERGENCY MEDICAL RESPONSE (Key points)</h4>"
+                                "<ul>"
+                                "<li><b>Anticonvulsant — Magnesium sulfate</b>: Pritchard (IM+IV) — loading 4 g IV slow +10 g IM (5 g each buttock); then 5 g IM q4h; or Zuspan (IV) — loading 4 g IV slow + 1 g/hr infusion.</li>"
+                                "<li><b>Monitoring</b>: RR and reflexes hourly; urine output hourly; continuous BP and fetal monitoring as available.</li>"
+                                "<li><b>Toxicity</b>: If absent reflexes, RR <12/min, or oliguria → stop MgSO4, give calcium gluconate 10 mL 10% (1 g) IV slowly, provide respiratory support.</li>"
+                                "<li><b>Duration</b>: Continue 24 h after last seizure or delivery.</li>"
+                                "</ul></div>", unsafe_allow_html=True)
                 else:
                     st.markdown("<div class='protocol-box medical-box' style='border-left-color: #0d9488;'><h4>✅ SYSTEM RISK CLASSIFICATION: STABLE TRACK</h4>"
                                 "Patient is tracking within safe algorithmic norms. Secure regular checkup intervals.<br>"
@@ -181,4 +184,4 @@ with tab_manual:
     1. **The Baselines Matrix:** Use the structural sidebar panels to input background genetic, demographic, and geographical contexts before reviewing ongoing parameters.
     2. **Urine Protein Testing Cards:** Dip standard validation testing strip layers inside early morning urine samples. Align color gradients closely with reference panels, logging results as nu[...]
     3. **The Unwell Override Protocol:** Preeclampsia operates on variable timelines. Any single warning sign checkbox trigger enforces a clinical high-risk output flag automatically to protect h[...]
-    """, unsafe_allow_html=True)
+    """, unsafe_allow_html=True), 
