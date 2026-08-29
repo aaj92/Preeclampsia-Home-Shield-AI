@@ -5,6 +5,8 @@ import sqlite3
 from datetime import datetime
 from sklearn.ensemble import RandomForestClassifier
 
+from utils import parse_urine_score, extract_positive_probability, validate_input_vector_columns
+
 # --------------------------------------------------------
 # CORE SYSTEM OPERATIONS & CONFIGURATIONS
 # --------------------------------------------------------
@@ -112,11 +114,8 @@ with tab_screen:
                 ]
             )
             
-        # Fix: parse the numeric prefix of the radio label safely
-        try:
-            protein_numeric = float(urine_score.split(":")[0])
-        except Exception:
-            protein_numeric = 0.0
+        # Use helper to parse the numeric prefix of the radio label safely
+        protein_numeric = parse_urine_score(urine_score)
 
         symptom_active = s_headache or s_vision or s_pain or s_swelling
         
@@ -138,39 +137,40 @@ with tab_screen:
                 'crisis_displacement_flag': map_binary(displaced)
             }])
             
-            # Ensure we extract the positive-class probability safely
-            prob_array = clinical_engine.predict_proba(input_vector)
-            try:
-                raw_prob = float(prob_array[0, 1])
-            except Exception:
-                # fallback: if only one column or unexpected shape
-                raw_prob = float(prob_array[0][1]) if len(prob_array[0]) > 1 else float(prob_array[0][0])
-
-            critical_vitals = (systolic >= 140) or (diastolic >= 90) or (protein_numeric >= 2)
-            is_high_risk = (raw_prob >= 0.28) or symptom_active or critical_vitals
-            
-            # Premium Custom Cards Layout Rendering
-            st.markdown(f"""
-                <div class="metric-card">
-                    <p style="color: #64748b; font-weight: 600; margin: 0; text-transform: uppercase; font-size: 0.85rem;">Calculated Statistical Onset Probability</p>
-                    <h2 style="color: {'#ef4444' if is_high_risk else '#0d9488'}; margin: 0.5rem 0 0 0; font-size: 2.5rem; font-weight: 700;">{raw_prob:.1%}</h2>
-                </div>
-            """, unsafe_allow_html=True)
-            
-            if is_high_risk:
-                st.markdown("<div class='protocol-box family-box'><h4>🚨 IMMEDIATE HOUSEHOLD EMERGENCY ACTIONS</h4>"
-                            "1. <b>EVACUATE TO CLINIC IMMEDIATELY:</b> Do not wait for appointments. Leave now.<br>"
-                            "2. <b>REST ON LEFT SIDE ONLY:</b> Avoid flat back postures to sustain uterine and renal vascular flows.<br>"
-                            "3. <b>MINIMIZE VISUAL STIMULI:</b> Keep rooms dim and quiet. Sensory stress drops seizure thresholds under hypertensive states.</div>", unsafe_allow_html=True)
-                
-                st.markdown("<div class='protocol-box medic-box'><h4>🏥 EMERGENCY MEDIC RESPONSE SEQUENCES</h4>"
-                            "• <b>Vascular Control:</b> Administer oral Labetalol or fast-acting Nifedipine immediately if Systolic $\\ge$ 160 mmHg.<br>"
-                            "• <b>Seizure Blockades:</b> Deploy full <b>Magnesium Sulfate (MgSO4)</b> loading protocols.<br>"
-                            "• <b>Obstetric Clearance:</b> Assess fetal maturity parameters. Prepare logistics for stabilization or active triage transport.</div>", unsafe_allow_html=True)
+            # Validate the input vector columns against the trained model's expected features
+            valid, msg = validate_input_vector_columns(input_vector, clinical_engine)
+            if not valid:
+                st.error(f"Feature mismatch: {msg}")
             else:
-                st.markdown("<div class='protocol-box medic-box' style='border-left-color: #0d9488;'><h4>✅ SYSTEM RISK CLASSIFICATION: STABLE TRACK</h4>"
-                            "Patient is tracking within safe algorithmic norms. Secure regular checkup intervals.<br>"
-                            "<b>CRITICAL INSTRUCTION:</b> If maternal headaches, vision spots, or acute right side stomach discomfort manifest later today, rerunning this triage assessment module immediately is mandatory.</div>", unsafe_allow_html=True)
+                # Ensure we extract the positive-class probability safely
+                prob_array = clinical_engine.predict_proba(input_vector)
+                raw_prob = extract_positive_probability(prob_array)
+
+                critical_vitals = (systolic >= 140) or (diastolic >= 90) or (protein_numeric >= 2)
+                is_high_risk = (raw_prob >= 0.28) or symptom_active or critical_vitals
+                
+                # Premium Custom Cards Layout Rendering
+                st.markdown(f"""
+                    <div class="metric-card">
+                        <p style="color: #64748b; font-weight: 600; margin: 0; text-transform: uppercase; font-size: 0.85rem;">Calculated Statistical Onset Probability</p>
+                        <h2 style="color: {'#ef4444' if is_high_risk else '#0d9488'}; margin: 0.5rem 0 0 0; font-size: 2.5rem; font-weight: 700;">{raw_prob:.1%}</h2>
+                    </div>
+                """, unsafe_allow_html=True)
+                
+                if is_high_risk:
+                    st.markdown("<div class='protocol-box family-box'><h4>🚨 IMMEDIATE HOUSEHOLD EMERGENCY ACTIONS</h4>"
+                                "1. <b>EVACUATE TO CLINIC IMMEDIATELY:</b> Do not wait for appointments. Leave now.<br>"
+                                "2. <b>REST ON LEFT SIDE ONLY:</b> Avoid flat back postures to sustain uterine and renal vascular flows.<br>"
+                                "3. <b>MINIMIZE VISUAL STIMULI:</b> Keep rooms dim and quiet. Sensory stress drops seizure thresholds under hypertensive states.</div>", unsafe_allow_html=True)
+                    
+                    st.markdown("<div class='protocol-box medic-box'><h4>🏥 EMERGENCY MEDIC RESPONSE SEQUENCES</h4>"
+                                "• <b>Vascular Control:</b> Administer oral Labetalol or fast-acting Nifedipine immediately if Systolic $\\ge$ 160 mmHg.<br>"
+                                "• <b>Seizure Blockades:</b> Deploy full <b>Magnesium Sulfate (MgSO4)</b> loading protocols.<br>"
+                                "• <b>Obstetric Clearance:</b> Assess fetal maturity parameters. Prepare logistics for stabilization or active triage transport.</div>", unsafe_allow_html=True)
+                else:
+                    st.markdown("<div class='protocol-box medic-box' style='border-left-color: #0d9488;'><h4>✅ SYSTEM RISK CLASSIFICATION: STABLE TRACK</h4>"
+                                "Patient is tracking within safe algorithmic norms. Secure regular checkup intervals.<br>"
+                                "<b>CRITICAL INSTRUCTION:</b> If maternal headaches, vision spots, or acute right side stomach discomfort manifest later today, rerunning this triage assessment module immediately is mandatory.</div>", unsafe_allow_html=True)
         else:
             st.info("Awaiting input initialization metrics panel. Complete and execute Step 1 & 2 to populate diagnostic triage response logs.")
 
