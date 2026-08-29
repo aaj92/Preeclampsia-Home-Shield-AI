@@ -51,6 +51,7 @@ TRANSLATIONS = {
         "risk_outcome": "Risk Assessment Result",
         "high_risk_alert": "HIGH RISK: Preeclampsia/Eclampsia Suspected",
         "high_risk_desc": "Immediate medical evaluation required",
+        "risk_percentage": "Preeclampsia Risk Score",
         "action_plan": "Recommended Actions",
         "family_actions": "Family Should:",
         "action_1": "Proceed to hospital without delay",
@@ -137,6 +138,7 @@ TRANSLATIONS = {
         "risk_outcome": "Résultat de l'Évaluation",
         "high_risk_alert": "RISQUE ÉLEVÉ: Prééclampsie/Éclampsie Suspectée",
         "high_risk_desc": "Évaluation médicale immédiate requise",
+        "risk_percentage": "Score de Risque de Prééclampsie",
         "action_plan": "Actions Recommandées",
         "family_actions": "La Famille Doit:",
         "action_1": "Se rendre à l'hôpital sans délai",
@@ -223,18 +225,35 @@ st.markdown("""
         }
         .metric-box {
             background-color: #f0f2f6;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            border-left: 4px solid #1f77b4;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border-left: 5px solid #1f77b4;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .risk-high {
-            background-color: #ffe6e6;
-            border-left: 4px solid #d62728;
+            background: linear-gradient(135deg, #ffe6e6 0%, #ffcccc 100%);
+            border-left: 5px solid #d62728;
         }
         .risk-low {
-            background-color: #e6ffe6;
-            border-left: 4px solid #2ca02c;
+            background: linear-gradient(135deg, #e6ffe6 0%, #ccffcc 100%);
+            border-left: 5px solid #2ca02c;
+        }
+        .risk-percentage-display {
+            font-size: 3em;
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        .risk-percentage-high {
+            color: #d62728;
+            background-color: rgba(214, 39, 40, 0.1);
+        }
+        .risk-percentage-low {
+            color: #2ca02c;
+            background-color: rgba(44, 160, 44, 0.1);
         }
     </style>
 """, unsafe_allow_html=True)
@@ -350,6 +369,7 @@ with tab_screening:
         }])
         
         raw_prob = float(clinical_engine.predict_proba(input_vector)[0, 1])
+        risk_percentage = raw_prob * 100
         
         # Risk determination
         critical_vitals = (systolic >= 140) or (diastolic >= 90) or (protein_numeric >= 2)
@@ -359,7 +379,15 @@ with tab_screening:
         st.subheader(t("risk_outcome"))
         
         if is_high_risk:
-            st.markdown(f"<div class='metric-box risk-high'><h3>{t('high_risk_alert')}</h3><p>{t('high_risk_desc')}</p></div>", unsafe_allow_html=True)
+            # High Risk Display
+            st.markdown(f"""
+                <div class='metric-box risk-high'>
+                    <h2 style='color: #d62728; text-align: center;'>{t('high_risk_alert')}</h2>
+                    <p style='text-align: center; font-size: 1.1em;'>{t('high_risk_desc')}</p>
+                    <div class='risk-percentage-display risk-percentage-high'>{risk_percentage:.1f}%</div>
+                    <p style='text-align: center; font-size: 0.95em;'>{t('risk_percentage')}</p>
+                </div>
+            """, unsafe_allow_html=True)
             
             risk_col1, risk_col2 = st.columns(2)
             
@@ -378,7 +406,15 @@ with tab_screening:
                     st.markdown(f"• {t('medical_3')}")
         
         else:
-            st.markdown(f"<div class='metric-box risk-low'><h3>{t('low_risk')}</h3><p>{t('low_risk_desc')}</p></div>", unsafe_allow_html=True)
+            # Low Risk Display
+            st.markdown(f"""
+                <div class='metric-box risk-low'>
+                    <h2 style='color: #2ca02c; text-align: center;'>{t('low_risk')}</h2>
+                    <p style='text-align: center; font-size: 1.1em;'>{t('low_risk_desc')}</p>
+                    <div class='risk-percentage-display risk-percentage-low'>{risk_percentage:.1f}%</div>
+                    <p style='text-align: center; font-size: 0.95em;'>{t('risk_percentage')}</p>
+                </div>
+            """, unsafe_allow_html=True)
             
             with st.container(border=True):
                 st.markdown(f"### {t('next_steps')}")
