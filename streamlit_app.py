@@ -24,6 +24,55 @@ except FileNotFoundError:
 map_binary = lambda text: 1 if text in ["Yes", "Oui"] else 0
 
 # --------------------------------------------------------
+# ISOLATED MEDICAL PROTOCOL STRINGS (PREVENTS NESTING ERRORS)
+# --------------------------------------------------------
+EN_MEDIC_TEXT = (
+    "<ul>"
+    "<li><b>Anticonvulsant Administration (Magnesium Sulfate):</b>"
+    "<ul>"
+    "<li><i>Pritchard Regimen (IM + IV):</i> Loading dose of 4g IV slowly + 10g IM (5g inside each buttock). Maintain with 5g IM every 4 hours.</li>"
+    "<li><i>Zuspan Regimen (IV):</i> Loading dose of 4g IV slowly. Maintain with a continuous 1 g/hour IV infusion.</li>"
+    "</ul>"
+    "</li>"
+    "<li><b>Mandatory Hourly Clinical Safety Monitoring:</b>"
+    "<ul>"
+    "<li>Evaluate respiratory rate (RR) and patellar deep-tendon reflexes every hour.</li>"
+    "<li>Monitor fluid balance hourly. Trigger emergency alert guidelines if urine output drops below 25-30 mL/hour.</li>"
+    "</ul>"
+    "</li>"
+    "<li><b>Magnesium Toxicity Reversal Protocol:</b>"
+    "<ul>"
+    "<li>If patellar reflexes vanish, RR drops below 12 breaths/minute, or severe oliguria occurs: Stop MgSO4 immediately.</li>"
+    "<li>Administer 10 mL of 10% Calcium Gluconate (1g) intravenously slowly. Provide respiratory support and secure senior medical call assistance.</li>"
+    "</ul>"
+    "</li>"
+    "</ul>"
+)
+
+FR_MEDIC_TEXT = (
+    "<ul>"
+    "<li><b>Administration d'Anticonvulsivants (Sulfate de Magnésium) :</b>"
+    "<ul>"
+    "<li><i>Protocole de Pritchard (IM + IV) :</i> Dose de charge de 4g IV lentement + 10g IM (5g dans chaque fesse). Maintenir avec 5g IM toutes les 4 heures.</li>"
+    "<li><i>Protocole de Zuspan (IV) :</i> Dose de charge de 4g IV lentement. Maintenir avec une perfusion IV continue de 1 g/heure.</li>"
+    "</ul>"
+    "</li>"
+    "<li><b>Surveillance Horaire Obligatoire de la Sécurité Clinique :</b>"
+    "<ul>"
+    "<li>Évaluez la fréquence respiratoire (FR) et les réflexes rotuliens toutes les heures.</li>"
+    "<li>Surveillez l'équilibre hydrique heure par heure. Alerte si la production d'urine tombe en dessous de 25-30 mL/heure.</li>"
+    "</ul>"
+    "</li>"
+    "<li><b>Protocole d'Inversion de la Toxicité du Magnésium :</b>"
+    "<ul>"
+    "<li>Si les réflexes disparaissent ou la FR tombe en dessous de 12 cycles/min : Arrêtez le MgSO4 immédiatement.</li>"
+    "<li>Administrer 10 mL de Gluconate de Calcium à 10% (1g) par voie intraveineuse lente. Appelez une assistance médicale.</li>"
+    "</ul>"
+    "</li>"
+    "</ul>"
+)
+
+# --------------------------------------------------------
 # GLOBAL TRANSLATION DICTIONARY MAPS
 # --------------------------------------------------------
 LANG_DICT = {
@@ -63,28 +112,7 @@ LANG_DICT = {
         "family_header": "🚨 IMMEDIATE HOUSEHOLD EMERGENCY ACTIONS",
         "family_txt": "1. <b>EVACUATE TO CLINIC IMMEDIATELY:</b> Do not wait for appointments. Leave now.<br>2. <b>REST ON LEFT SIDE ONLY:</b> Avoid flat back postures to sustain uterine and renal vascular flows.<br>3. <b>MINIMIZE VISUAL STIMULI:</b> Keep rooms dim and quiet. Sensory stress drops seizure thresholds under hypertensive states.",
         "medic_header": "🏥 CRITICAL ECLAMPSIA MANAGEMENT INTEGRATION PROTOCOLS",
-        "medic_txt": """
-        <ul>
-            <li><b>Anticonvulsant Administration (Magnesium Sulfate):</b>
-                <ul>
-                    <li><i>Pritchard Regimen (IM + IV):</i> Loading dose of 4g IV slowly + 10g IM (5g inside each buttock). Maintain with 5g IM every 4 hours.</li>
-                    <li><i>Zuspan Regimen (IV):</i> Loading dose of 4g IV slowly. Maintain with a continuous 1 g/hour IV infusion.</li>
-                </ul>
-            </li>
-            <li><b>Mandatory Hourly Clinical Safety Monitoring:</b>
-                <ul>
-                    <li>Evaluate respiratory rate (RR) and patellar deep-tendon reflexes every hour.</li>
-                    <li>Monitor fluid balance hourly. Trigger emergency alert guidelines if urine output drops below 25–30 mL/hour.</li>
-                </ul>
-            </li>
-            <li><b>Magnesium Toxicity Reversal Protocol:</b>
-                <ul>
-                    <li>If patellar reflexes vanish, RR drops below 12 breaths/minute, or severe oliguria occurs: Stop MgSO4 immediately.</li>
-                    <li>Administer 10 mL of 10% Calcium Gluconate (1g) intravenously slowly. Provide respiratory support and secure senior medical call assistance.</li>
-                </ul>
-            </li>
-        </ul>
-        """
+        "medic_txt": EN_MEDIC_TEXT
     },
     "Français": {
         "title": "BOUCLIER MATERNEL DOMESTIQUE",
@@ -122,28 +150,7 @@ LANG_DICT = {
         "family_header": "🚨 ACTIONS D'URGENCE IMMÉDIATES POUR LA FAMILLE",
         "family_txt": "1. <b>ÉVACUER IMMÉDIATEMENT À LA CLINIQUE :</b> N'attendez pas de rendez-vous. Partez maintenant.<br>2. <b>REPOS SUR LE CÔTÉ GAUCHE UNIQUEMENT :</b> Évitez de vous allonger sur le dos pour maintenir les flux sanguins rénaux.<br>3. <b>MINIMISER LES STIMULI VISUELS :</b> Gardez les pièces sombres et calmes pour prévenir les crises.",
         "medic_header": "🏥 PROTOCOLES CRITIQUES DE GESTION DE L'ÉCLAMPSIE",
-        "medic_txt": """
-        <ul>
-            <li><b>Administration d'Anticonvulsivants (Sulfate de Magnésium) :</b>
-                <ul>
-                    <li><i>Protocole de Pritchard (IM + IV) :</i> Dose de charge de 4g IV lentement + 10g IM (5g dans chaque fesse). Maintenir avec 5g IM toutes les 4 heures.</li>
-                    <li><i>Protocole de Zuspan (IV) :</i> Dose de charge de 4g IV lentement. Maintenir avec une perfusion IV continue de 1 g/heure.</li>
-                </ul>
-            </li>
-            <li><b>Surveillance Horaire Obligatoire de la Sécurité Clinique :</b>
-                <ul>
-                    <li>Évaluez la fréquence respiratoire (FR) et les réflexes rotuliens toutes les heures.</li>
-                    <li>Surveillez l'équilibre hydrique heure par heure. Alerte si la production d'urine tombe en dessous de 25–30 mL/heure.</li>
-                </ul>
-            </li>
-            <li><b>Protocole d'Inversion de la Toxicité du Magnésium :</b>
-                <ul>
-                    <li>Si les réflexes disparaissent ou la FR tombe en dessous de 12 cycles/min : Arrêtez le MgSO4 immédiatement.</li>
-                    <li>Administrer 10 mL de Gluconate de Calcium à 10% (1g) par voie intraveineuse lente. Appelez une assistance médicale.</li>
-                </ul>
-            </li>
-        </ul>
-        """
+        "medic_txt": FR_MEDIC_TEXT
     }
 }
 
@@ -152,10 +159,16 @@ LANG_DICT = {
 # --------------------------------------------------------
 st.set_page_config(page_title="Maternal Home-Shield AI", layout="wide", initial_sidebar_state="expanded")
 
-# Raw clean style injection variable to stop compiler exceptions
-CSS_DATA = """
-<style>
-    .main { background-color: #f8fafc; }
-    .metric-card { background-color: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
-    .protocol-box { border-radius: 12px; padding: 1.5rem; margin-top: 1rem; color: #1e293b; }
-    .family-box { background-color: #fef2f2; border-left: 5px solid #ef4444; }
+CSS_DATA = (
+    "<style>"
+    ".main { background-color: #f8fafc; }"
+    ".metric-card { background-color: white; border-radius: 12px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }"
+    ".protocol-box { border-radius: 12px; padding: 1.5rem; margin-top: 1rem; color: #1e293b; }"
+    ".family-box { background-color: #fef2f2; border-left: 5px solid #ef4444; }"
+    ".medic-box { background-color: #f0fdfa; border-left: 5px solid #0d9488; }"
+    "</style>"
+)
+st.markdown(CSS_DATA, unsafe_content_with_markup=True)
+
+# Language Control Hub
+top_left_col, top_right_col = st.columns([0.8, 0.2])
