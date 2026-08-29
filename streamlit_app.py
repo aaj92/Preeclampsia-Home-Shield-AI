@@ -40,11 +40,11 @@ TRANSLATIONS = {
         "systolic": "Systolic Blood Pressure (mmHg)",
         "diastolic": "Diastolic Blood Pressure (mmHg)",
         "urine_label": "Urine Protein Detection",
-        "urine_instructions": "Match strip color to reference card:",
-        "urine_0": "Negative (No protein)",
-        "urine_1": "Trace (1+)",
-        "urine_2": "Moderate (2+)",
-        "urine_3": "High (3+)",
+        "urine_instructions": "Dip the strip as directed, wait the specified time, then compare it with the color chart supplied with your test kit:",
+        "urine_0": "No color change",
+        "urine_1": "Slight color change",
+        "urine_2": "Moderate color change",
+        "urine_3": "Strong color change",
         
         # Button & Results
         "run_assessment": "Calculate Risk Assessment",
@@ -113,6 +113,14 @@ TRANSLATIONS = {
         
         # Errors
         "error_missing_model": "System initialization error. Clinical model unavailable.",
+        "urine_home_title": "🧪 HOME URINE CHECK",
+        "urine_home_note": "Select the color change that most closely matches your test strip.",
+        "home_action_label": "FOR FAMILY / CAREGIVER",
+        "medical_action_label": "FOR HEALTHCARE PROFESSIONALS",
+        "why_high_risk": "Why did the system trigger this alert?",
+        "screening_disclaimer": "SCREENING RESULT — NOT A DIAGNOSIS",
+        "screening_disclaimer_text": "This tool does not replace professional medical assessment. If severe symptoms are present, seek emergency care immediately regardless of the calculated score.",
+        "screening_completed": "Screening completed",
     },
     "fr": {
         # Page & Header
@@ -145,11 +153,11 @@ TRANSLATIONS = {
         "systolic": "Pression Artérielle Systolique (mmHg)",
         "diastolic": "Pression Artérielle Diastolique (mmHg)",
         "urine_label": "Détection de Protéines Urinaires",
-        "urine_instructions": "Comparez la couleur de la bandelette à la référence:",
-        "urine_0": "Négatif (Pas de protéine)",
-        "urine_1": "Trace (1+)",
-        "urine_2": "Modéré (2+)",
-        "urine_3": "Élevé (3+)",
+        "urine_instructions": "Utilisez la bandelette selon les instructions, attendez le temps indiqué, puis comparez-la au nuancier fourni avec votre kit:",
+        "urine_0": "Aucun changement de couleur",
+        "urine_1": "Slight color change",
+        "urine_2": "Changement de couleur modéré",
+        "urine_3": "Changement de couleur important",
         
         # Button & Results
         "run_assessment": "Calculer l'Évaluation du Risque",
@@ -218,6 +226,14 @@ TRANSLATIONS = {
         
         # Errors
         "error_missing_model": "Erreur d'initialisation du système. Modèle clinique non disponible.",
+        "urine_home_title": "🧪 TEST URINAIRE À DOMICILE",
+        "urine_home_note": "Sélectionnez le changement de couleur qui correspond le mieux à votre bandelette.",
+        "home_action_label": "POUR LA FAMILLE / L’AIDANT",
+        "medical_action_label": "POUR LES PROFESSIONNELS DE SANTÉ",
+        "why_high_risk": "Pourquoi cette alerte a-t-elle été déclenchée ?",
+        "screening_disclaimer": "RÉSULTAT DE DÉPISTAGE — PAS UN DIAGNOSTIC",
+        "screening_disclaimer_text": "Cet outil ne remplace pas une évaluation médicale professionnelle. En présence de symptômes sévères, recherchez immédiatement des soins d’urgence, quel que soit le score calculé.",
+        "screening_completed": "Dépistage terminé",
     }
 }
 
@@ -461,8 +477,9 @@ with tab_screening:
         diastolic = st.number_input(t("diastolic"), min_value=40, max_value=140, value=75)
     
     with col_v2:
-        st.markdown(f"**{t('urine_label')}**")
+        st.markdown(f"### {t('urine_home_title')}")
         st.markdown(f"*{t('urine_instructions')}*")
+        st.caption(t("urine_home_note"))
         urine_score = st.radio(
             "Select protein level:",
             options=[
@@ -517,9 +534,8 @@ with tab_screening:
             st.markdown("---")
             
             # Side-by-Side Response Cards
-            # Use st.html() instead of several st.markdown(..., unsafe_allow_html=True)
-            # calls. Streamlit's Markdown renderer can close nested HTML elements
-            # between separate calls, which makes the markup appear as raw HTML.
+            # Render the complete nested HTML in ONE component. This prevents
+            # Streamlit's Markdown renderer from exposing the HTML as text.
             response_html = f"""
             <style>
                 .response-grid {{
@@ -529,35 +545,30 @@ with tab_screening:
                     margin: 24px 0;
                     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
                 }}
-
                 .response-card {{
                     border-radius: 20px;
                     padding: 26px;
-                    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.10);
-                    border: 1px solid rgba(15, 23, 42, 0.08);
-                    background: #ffffff;
+                    box-shadow: 0 10px 30px rgba(15,23,42,.10);
+                    border: 1px solid rgba(15,23,42,.08);
                     box-sizing: border-box;
+                    background: #fff;
                 }}
-
                 .family-card {{
-                    background: linear-gradient(145deg, #f0f8ff 0%, #ffffff 100%);
+                    background: linear-gradient(145deg,#f0f8ff 0%,#fff 100%);
                     border-top: 5px solid #1976d2;
                 }}
-
                 .medical-card {{
-                    background: linear-gradient(145deg, #fff4f4 0%, #ffffff 100%);
+                    background: linear-gradient(145deg,#fff4f4 0%,#fff 100%);
                     border-top: 5px solid #d32f2f;
                 }}
-
                 .card-header {{
                     display: flex;
                     align-items: center;
                     gap: 14px;
                     padding-bottom: 18px;
                     margin-bottom: 18px;
-                    border-bottom: 1px solid rgba(15, 23, 42, 0.10);
+                    border-bottom: 1px solid rgba(15,23,42,.10);
                 }}
-
                 .card-header-icon {{
                     width: 48px;
                     height: 48px;
@@ -566,38 +577,39 @@ with tab_screening:
                     justify-content: center;
                     border-radius: 14px;
                     font-size: 24px;
-                    background: rgba(255, 255, 255, 0.85);
-                    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+                    background: rgba(255,255,255,.85);
+                    box-shadow: 0 4px 12px rgba(15,23,42,.08);
                     flex-shrink: 0;
                 }}
-
+                .audience-label {{
+                    font-size: .68rem;
+                    font-weight: 800;
+                    letter-spacing: .08em;
+                    margin-bottom: 4px;
+                    text-transform: uppercase;
+                }}
+                .family-audience {{ color: #1976d2; }}
+                .medical-audience {{ color: #d32f2f; }}
                 .card-header-title {{
                     font-size: 1.12rem;
                     line-height: 1.3;
                     font-weight: 750;
                     margin: 0;
-                    letter-spacing: -0.01em;
                 }}
-
-                .family-card .card-header-title {{ color: #1565c0; }}
-                .medical-card .card-header-title {{ color: #c62828; }}
-
                 .card-subtitle {{
                     margin-top: 4px;
                     color: #64748b;
-                    font-size: 0.84rem;
+                    font-size: .84rem;
                 }}
-
                 .action-item {{
                     display: flex;
                     align-items: flex-start;
                     gap: 12px;
                     padding: 12px 0;
                     color: #263238;
-                    font-size: 0.94rem;
+                    font-size: .94rem;
                     line-height: 1.55;
                 }}
-
                 .action-icon {{
                     width: 25px;
                     height: 25px;
@@ -609,35 +621,28 @@ with tab_screening:
                     color: #1565c0;
                     font-weight: 800;
                     flex-shrink: 0;
-                    margin-top: 1px;
                 }}
-
                 .medical-section {{
                     margin: 12px 0;
                     padding: 15px 16px;
-                    background: rgba(255, 255, 255, 0.88);
-                    border: 1px solid rgba(211, 47, 47, 0.12);
+                    background: rgba(255,255,255,.88);
+                    border: 1px solid rgba(211,47,47,.12);
                     border-left: 4px solid #d32f2f;
                     border-radius: 12px;
                 }}
-
                 .medical-section-title {{
                     color: #b71c1c;
                     font-weight: 750;
-                    font-size: 0.90rem;
+                    font-size: .90rem;
                     margin-bottom: 7px;
                 }}
-
                 .medical-section-text {{
                     color: #374151;
-                    font-size: 0.86rem;
+                    font-size: .86rem;
                     line-height: 1.62;
                 }}
-
                 @media (max-width: 900px) {{
-                    .response-grid {{
-                        grid-template-columns: 1fr;
-                    }}
+                    .response-grid {{ grid-template-columns: 1fr; }}
                 }}
             </style>
 
@@ -645,63 +650,43 @@ with tab_screening:
                 <section class="response-card family-card">
                     <div class="card-header">
                         <div class="card-header-icon">👨‍👩‍👧</div>
-                        <div class="card-header-title">{t('family_response')}</div>
+                        <div>
+                            <div class="audience-label family-audience">{t('home_action_label')}</div>
+                            <div class="card-header-title">{t('family_response')}</div>
+                        </div>
                     </div>
-
-                    <div class="action-item">
-                        <div class="action-icon">✓</div>
-                        <div>{t('action_1')}</div>
-                    </div>
-                    <div class="action-item">
-                        <div class="action-icon">✓</div>
-                        <div>{t('action_2')}</div>
-                    </div>
-                    <div class="action-item">
-                        <div class="action-icon">✓</div>
-                        <div>{t('action_3')}</div>
-                    </div>
-                    <div class="action-item">
-                        <div class="action-icon">✓</div>
-                        <div>{t('action_4')}</div>
-                    </div>
-                    <div class="action-item">
-                        <div class="action-icon">✓</div>
-                        <div>{t('action_5')}</div>
-                    </div>
+                    <div class="action-item"><div class="action-icon">✓</div><div>{t('action_1')}</div></div>
+                    <div class="action-item"><div class="action-icon">✓</div><div>{t('action_2')}</div></div>
+                    <div class="action-item"><div class="action-icon">✓</div><div>{t('action_3')}</div></div>
+                    <div class="action-item"><div class="action-icon">✓</div><div>{t('action_4')}</div></div>
+                    <div class="action-item"><div class="action-icon">✓</div><div>{t('action_5')}</div></div>
                 </section>
 
                 <section class="response-card medical-card">
                     <div class="card-header">
                         <div class="card-header-icon">🏥</div>
                         <div>
+                            <div class="audience-label medical-audience">{t('medical_action_label')}</div>
                             <div class="card-header-title">{t('medical_response')}</div>
                             <div class="card-subtitle">{t('medical_response_subtitle')}</div>
                         </div>
                     </div>
-
                     <div class="medical-section">
                         <div class="medical-section-title">{t('anticonvulsant_title')}</div>
-                        <div class="medical-section-text">
-                            • {t('pritchard_regimen')}<br>
-                            {t('zuspan_regimen')}
-                        </div>
+                        <div class="medical-section-text">• {t('pritchard_regimen')}<br>{t('zuspan_regimen')}</div>
                     </div>
-
                     <div class="medical-section">
                         <div class="medical-section-title">{t('monitoring_title')}</div>
                         <div class="medical-section-text">{t('monitoring_text')}</div>
                     </div>
-
                     <div class="medical-section">
                         <div class="medical-section-title">{t('toxicity_title')}</div>
                         <div class="medical-section-text">{t('toxicity_text')}</div>
                     </div>
-
                     <div class="medical-section">
                         <div class="medical-section-title">{t('duration_title')}</div>
                         <div class="medical-section-text">{t('duration_text')}</div>
                     </div>
-
                     <div class="medical-section">
                         <div class="medical-section-title">{t('practical_title')}</div>
                         <div class="medical-section-text">{t('practical_text')}</div>
@@ -711,6 +696,39 @@ with tab_screening:
             """
 
             st.html(response_html)
+
+            # Show the concrete reasons for the emergency flag.
+            triggers = []
+            if systolic >= 140 or diastolic >= 90:
+                triggers.append(f"🔴 Blood pressure: {systolic}/{diastolic} mmHg")
+            if protein_numeric >= 2:
+                triggers.append("🔴 Strong urine-strip color change")
+            elif protein_numeric >= 1:
+                triggers.append("🟠 Urine-strip color change detected")
+            if s_headache:
+                triggers.append("🔴 Severe headache reported")
+            if s_vision:
+                triggers.append("🔴 Vision changes reported")
+            if s_pain:
+                triggers.append("🔴 Upper abdominal/right-upper-quadrant pain reported")
+            if s_swelling:
+                triggers.append("🟠 Facial or hand swelling reported")
+            if raw_prob >= 0.28:
+                triggers.append(f"🟠 Model-estimated risk: {risk_percentage:.1f}%")
+
+            with st.container(border=True):
+                st.markdown(f"### {t('why_high_risk')}")
+                for trigger in triggers:
+                    st.markdown(f"- {trigger}")
+                st.caption(
+                    f"⏱ {t('screening_completed')}: "
+                    f"{datetime.now().strftime('%Y-%m-%d %H:%M')}"
+                )
+
+            st.warning(
+                f"**{t('screening_disclaimer')}**\n\n"
+                f"{t('screening_disclaimer_text')}"
+            )
 
         else:
             # Low Risk Display
