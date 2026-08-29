@@ -168,7 +168,6 @@ CSS_DATA = (
     ".medic-box { background-color: #f0fdfa; border-left: 5px solid #0d9488; }"
     "</style>"
 )
-st.markdown(CSS_DATA, unsafe_content_with_markup=True)
+st.markdown(CSS_DATA, unsafe_allow_html=True)
 
 # Language Control Hub
-top_left_col, top_right_col = st.columns([0.8, 0.2])
