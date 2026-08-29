@@ -99,7 +99,8 @@ with tab_screen:
             'crisis_displacement_flag': map_binary(displaced)
         }])
         
-        raw_prob = float(clinical_engine.predict_proba(input_vector)[:, 1])
+       raw_prob = float(clinical_engine.predict_proba(input_vector)[0, 1])
+
         
         # Override calculation safety ceiling if severe home red flags are explicitly triggered
         critical_vitals = (systolic >= 140) or (diastolic >= 90) or (protein_numeric >= 2)
